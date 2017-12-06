@@ -5,13 +5,6 @@
 
 using namespace com::softwareag::connectivity;
 
-void simple()
-{
-	fprintf(stdout, "Button pressed\n");
-	fflush(stdout);
-//	abort();
-}
-
 namespace
 {
 	typedef void (*fptr_t)();
@@ -25,7 +18,7 @@ namespace
 //		GPIOPlugin::corr->sendEvent(oss.str());
 
 		oss << "Button pressed";
-		fprintf(stdout, "%s\n", oss.str().c_str());
+		fprintf(stderr, "%s\n", oss.str().c_str());
 	}
 
 	std::array<fptr_t, MAX_PIN> interruptTable 
@@ -101,8 +94,7 @@ void GPIOPlugin::watch(int64_t pinId, int64_t eplEdge)
 		throw std::runtime_error("Unknown edge type passed to watch()");
 	}
 
-//	wiringPiISR(pinId, eplEdge, interruptTable[pinId]);
-	wiringPiISR(pinId, INT_EDGE_BOTH, &simple);
+	wiringPiISR(pinId, eplEdge, interruptTable[pinId]);
 }
 
 bool GPIOPlugin::read(int64_t pinId)
