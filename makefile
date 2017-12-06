@@ -48,7 +48,7 @@ install:
 	mkdir -p $(APAMA_HOME)/lib
 	mkdir -p $(APAMA_HOME)/monitors
 	cp $(BINDIR)/libGPIOPlugin.so $(APAMA_HOME)/lib
-#	cp GPIOPlugin.mon $(APAMA_WORK)/monitors
+	cp GPIOPlugin.mon $(APAMA_HOME)/monitors
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)

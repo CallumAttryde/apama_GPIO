@@ -5,6 +5,13 @@
 
 using namespace com::softwareag::connectivity;
 
+void simple()
+{
+	fprintf(stdout, "Button pressed\n");
+	fflush(stdout);
+//	abort();
+}
+
 namespace
 {
 	typedef void (*fptr_t)();
@@ -14,9 +21,11 @@ namespace
 	void interrupt_cb_t()
 	{
 		std::ostringstream oss;
-		oss << "com.apamax.rpi.gpio.Interrupt(" << PIN << ")";
+//		oss << "com.apamax.rpi.gpio.Interrupt(" << PIN << ")";
+//		GPIOPlugin::corr->sendEvent(oss.str());
 
-		GPIOPlugin::corr->sendEvent(oss.str());
+		oss << "Button pressed";
+		fprintf(stdout, "%s\n", oss.str().c_str());
 	}
 
 	std::array<fptr_t, MAX_PIN> interruptTable 
@@ -34,7 +43,7 @@ namespace
 
 void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 {
-	md.registerMethod<decltype(&GPIOPlugin::setup), &GPIOPlugin::setup>("setup", "action<sequence<integer>, sequence<integer> >");
+	md.registerMethod<decltype(&GPIOPlugin::setup), &GPIOPlugin::setup>("setup", "action<sequence<integer>, sequence<integer> > returns integer");
 	md.registerMethod<decltype(&GPIOPlugin::getInfo), &GPIOPlugin::getInfo>("getInfo", "action<> returns dictionary<string, string>");
 	md.registerMethod<decltype(&GPIOPlugin::watch), &GPIOPlugin::watch>("watch", "action<integer, integer>");
 	md.registerMethod<decltype(&GPIOPlugin::read), &GPIOPlugin::read>("read", "action<integer> returns boolean");
@@ -42,7 +51,7 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 //	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
 
-	corr = &getCorrelator();
+//	corr = &getCorrelator();
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -92,7 +101,8 @@ void GPIOPlugin::watch(int64_t pinId, int64_t eplEdge)
 		throw std::runtime_error("Unknown edge type passed to watch()");
 	}
 
-	wiringPiISR(pinId, eplEdge, interruptTable[pinId]);
+//	wiringPiISR(pinId, eplEdge, interruptTable[pinId]);
+	wiringPiISR(pinId, INT_EDGE_BOTH, &simple);
 }
 
 bool GPIOPlugin::read(int64_t pinId)

@@ -20,7 +20,7 @@ public:
 	static void initialize(base_plugin_t::method_data_t &md);
 
 	/** Handle to the correlator */
-	static com::apama::epl::CorrelatorInterface* corr;
+//	static com::apama::epl::CorrelatorInterface* corr;
 
 	/** Setup the pins we want to use */
 	int64_t setup(const com::softwareag::connectivity::list_t &inputPins, const com::softwareag::connectivity::list_t &outputPins);
