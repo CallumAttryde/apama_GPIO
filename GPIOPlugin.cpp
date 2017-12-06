@@ -19,7 +19,9 @@ namespace
 
 		oss << "Button pressed";
 		fprintf(stderr, "%s\n", oss.str().c_str());
+		pluginInstance->interruptCallback();
 	}
+
 
 	std::array<fptr_t, MAX_PIN> interruptTable 
 	{
@@ -32,8 +34,11 @@ namespace
 		interrupt_cb_t<30>, interrupt_cb_t<31>, interrupt_cb_t<32>, interrupt_cb_t<33>, interrupt_cb_t<34>, 
 		interrupt_cb_t<35>, interrupt_cb_t<36>, interrupt_cb_t<37>, interrupt_cb_t<38>, interrupt_cb_t<39>,
 	};
-}
+} // namespace
 
+void GPIOPlugin::interruptCallback() {
+	fprintf(stderr, "------- Button pressed - interrupt callback\n");
+}
 void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 {
 	md.registerMethod<decltype(&GPIOPlugin::setup), &GPIOPlugin::setup>("setup", "action<sequence<integer>, sequence<integer> > returns integer");
@@ -95,6 +100,8 @@ void GPIOPlugin::watch(int64_t pinId, int64_t eplEdge)
 	}
 
 	wiringPiISR(pinId, eplEdge, interruptTable[pinId]);
+	//wiringPiISR(pinId, eplEdge, &interrupt_cb_t<22>);
+
 }
 
 bool GPIOPlugin::read(int64_t pinId)
