@@ -1,0 +1,24 @@
+using com.apamax.rpi.gpio.Setup;
+using com.apamax.rpi.gpio.LED;
+
+monitor BasicLED {
+
+	action onload() {
+		// Setup GPIO access to the pins
+		(new Setup).setOutputPins([17]).init();
+
+		// Log the Raspberry Pi info to the correlator log
+		(new com.apamax.rpi.gpio.Info).getInfo();
+		
+		// Create an LED event on pin 17
+		LED led := (new LED).init(17, false);
+		
+		// Turn the LED on
+		led.setOn();
+		
+		// Wait 5 seconds and turn the LED off
+		on wait(5.0) {
+			led.setOff();
+		}
+	}
+}
