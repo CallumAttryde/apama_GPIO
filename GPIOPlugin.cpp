@@ -13,10 +13,7 @@ namespace
 	template<int PIN>
 	void interrupt_cb_t()
 	{
-		std::ostringstream oss;
-		oss << "com.apamax.rpi.gpio.Interrupt(" << PIN << ")";
-
-		GPIOPlugin::corr->sendEvent(oss.str());
+		pluginInstance->interruptCallback(PIN);
 	}
 
 	std::array<fptr_t, MAX_PIN> interruptTable 
@@ -30,19 +27,22 @@ namespace
 		interrupt_cb_t<30>, interrupt_cb_t<31>, interrupt_cb_t<32>, interrupt_cb_t<33>, interrupt_cb_t<34>, 
 		interrupt_cb_t<35>, interrupt_cb_t<36>, interrupt_cb_t<37>, interrupt_cb_t<38>, interrupt_cb_t<39>,
 	};
-}
+} // namespace
 
+void GPIOPlugin::interruptCallback(int pin) {
+	std::ostringstream oss;
+	oss << "com.apamax.rpi.gpio.Interrupt(" << pin << ")";
+	getCorrelator().sendEvent(oss.str());
+}
 void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 {
-	md.registerMethod<decltype(&GPIOPlugin::setup), &GPIOPlugin::setup>("setup", "action<sequence<integer>, sequence<integer> >");
+	md.registerMethod<decltype(&GPIOPlugin::setup), &GPIOPlugin::setup>("setup", "action<sequence<integer>, sequence<integer> > returns integer");
 	md.registerMethod<decltype(&GPIOPlugin::getInfo), &GPIOPlugin::getInfo>("getInfo", "action<> returns dictionary<string, string>");
 	md.registerMethod<decltype(&GPIOPlugin::watch), &GPIOPlugin::watch>("watch", "action<integer, integer>");
 	md.registerMethod<decltype(&GPIOPlugin::read), &GPIOPlugin::read>("read", "action<integer> returns boolean");
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 //	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
-
-	corr = &getCorrelator();
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)

@@ -10,17 +10,22 @@
 
 #define MAX_PIN 40
 
+class GPIOPlugin;
+
+static GPIOPlugin* pluginInstance;
+
 class GPIOPlugin : public com::apama::epl::EPLPlugin<GPIOPlugin>
 {
 public:
-	GPIOPlugin() : base_plugin_t("GPIOPluginPlugin") {}
+	GPIOPlugin() : base_plugin_t("GPIOPluginPlugin") {
+		pluginInstance = this;
+	}
 	~GPIOPlugin() {}
 
 	/** Link the native plugin functions to the EPL plugin actions */
 	static void initialize(base_plugin_t::method_data_t &md);
 
-	/** Handle to the correlator */
-	static com::apama::epl::CorrelatorInterface* corr;
+	void interruptCallback(int pin);
 
 	/** Setup the pins we want to use */
 	int64_t setup(const com::softwareag::connectivity::list_t &inputPins, const com::softwareag::connectivity::list_t &outputPins);
