@@ -25,10 +25,7 @@ public:
 	/** Link the native plugin functions to the EPL plugin actions */
 	static void initialize(base_plugin_t::method_data_t &md);
 
-	void interruptCallback();
-
-	/** Handle to the correlator */
-//	static com::apama::epl::CorrelatorInterface* corr;
+	void interruptCallback(int pin);
 
 	/** Setup the pins we want to use */
 	int64_t setup(const com::softwareag::connectivity::list_t &inputPins, const com::softwareag::connectivity::list_t &outputPins);

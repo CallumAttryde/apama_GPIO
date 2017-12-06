@@ -4,11 +4,8 @@ class PySysTest(GPIOBaseTest):
 
 	def execute(self):
 		self.start()
-
-		self.correlator.injectMonitorscript(filenames=['tutorial.mon'])
-		
-                self.waitForSignal('correlator.err', expr='Button pressed')
-#		self.wait(30)
+		self.correlator.injectMonitorscript(filenames=['tutorial.mon'])		
+		self.wait(30)
 
 	def validate(self):
 		pass

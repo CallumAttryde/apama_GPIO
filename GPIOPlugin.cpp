@@ -13,15 +13,8 @@ namespace
 	template<int PIN>
 	void interrupt_cb_t()
 	{
-		std::ostringstream oss;
-//		oss << "com.apamax.rpi.gpio.Interrupt(" << PIN << ")";
-//		GPIOPlugin::corr->sendEvent(oss.str());
-
-		oss << "Button pressed";
-		fprintf(stderr, "%s\n", oss.str().c_str());
-		pluginInstance->interruptCallback();
+		pluginInstance->interruptCallback(PIN);
 	}
-
 
 	std::array<fptr_t, MAX_PIN> interruptTable 
 	{
@@ -36,8 +29,10 @@ namespace
 	};
 } // namespace
 
-void GPIOPlugin::interruptCallback() {
-	fprintf(stderr, "------- Button pressed - interrupt callback\n");
+void GPIOPlugin::interruptCallback(int pin) {
+	std::ostringstream oss;
+	oss << "com.apamax.rpi.gpio.Interrupt(" << pin << ")";
+	getCorrelator().sendEvent(oss.str());
 }
 void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 {
@@ -48,8 +43,6 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 //	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
-
-//	corr = &getCorrelator();
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -100,8 +93,6 @@ void GPIOPlugin::watch(int64_t pinId, int64_t eplEdge)
 	}
 
 	wiringPiISR(pinId, eplEdge, interruptTable[pinId]);
-	//wiringPiISR(pinId, eplEdge, &interrupt_cb_t<22>);
-
 }
 
 bool GPIOPlugin::read(int64_t pinId)
