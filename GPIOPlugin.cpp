@@ -42,7 +42,7 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::read), &GPIOPlugin::read>("read", "action<integer> returns boolean");
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
-//	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
+	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -112,7 +112,7 @@ void GPIOPlugin::block(int64_t milliseconds)
 	delay(milliseconds);
 }
 
-void GPIOPlugin::softPWM(int64_t pinId, float dutyCycle)
+void GPIOPlugin::softPWM(int64_t pinId, double dutyCycle)
 {
 	checkPinValid(pinId);
 	int64_t value = dutyCycle * 100;
