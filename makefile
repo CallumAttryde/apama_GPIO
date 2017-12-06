@@ -45,10 +45,10 @@ $(BINDIR)/libGPIOPlugin.so: $(OBJDIR)/$(GPIOPLUGIN-OBJ)
 	$(CXX) -o $@ $(OBJDIR)/$(GPIOPLUGIN-OBJ) $(LDFLAGS) -lwiringPi
 	
 install:
-	mkdir -p $(APAMA_WORK)/lib
-	mkdir -p $(APAMA_WORK)/monitors
-	cp $(BINDIR)/libGPIOPlugin.so $(APAMA_WORK)/lib
-	cp GPIOPlugin.mon $(APAMA_WORK)/monitors
+	mkdir -p $(APAMA_HOME)/lib
+	mkdir -p $(APAMA_HOME)/monitors
+	cp $(BINDIR)/libGPIOPlugin.so $(APAMA_HOME)/lib
+#	cp GPIOPlugin.mon $(APAMA_WORK)/monitors
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
