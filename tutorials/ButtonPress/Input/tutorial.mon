@@ -1,0 +1,18 @@
+using com.apamax.rpi.gpio.Setup;
+using com.apamax.rpi.gpio.Button;
+
+monitor ButtonPress {
+
+	action onload() {
+		// Setup GPIO access to the pins
+		(new Setup).setInputPins([22]).init();
+
+		integer buttonPin := 22;
+		Button button := (new Button).init(buttonPin);
+		
+		// Setup a listener for the ButtonPush on buttonPin
+		on all com.apamax.rpi.gpio.ButtonPush(pin=buttonPin) {
+			log "Button Pressed" at INFO;
+		}
+	}
+}
