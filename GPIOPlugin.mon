@@ -1,0 +1,367 @@
+package com.apamax.rpi.gpio;
+
+/** @private */
+event Interrupt {
+	integer pin;
+}
+
+/**
+ * EPL wrapper for GPIO access setup.  Used so we don't have to run as root.
+ */
+event Setup {
+	/** @private */
+	import "GPIOPlugin" as GPIOPlugin;
+	/** @private */
+	sequence<integer> inPins;
+	/** @private */
+	sequence<integer> outPins;
+	
+	/**
+	 * Sets up supplied pin numbers for input access.
+	 *
+	 * @param inputPins The sequence of pins for input access.
+	 * @returns The Setup object so action calls can be chained
+	 */
+	action setInputPins(sequence<integer> inputPins) returns Setup {
+		inPins := inputPins;
+		return self;
+	}
+
+	/**
+	 * Sets up supplied pin numbers for output access.
+	 *
+	 * @param outputPins The sequence of pins for output access.
+	 * @returns The Setup object so action calls can be chained
+	 */
+	action setOutputPins(sequence<integer> outputPins) returns Setup {
+		outPins := outputPins;
+		return self;
+	}
+
+	/**
+	 * Sets up the GPIOPlugin.  MUST be called to use the Plugin.
+	 */
+	action init() {
+		if (0 != GPIOPlugin.setup(inPins, outPins)) then {
+			log "GPIOPlugin setup failed";
+		}
+	}
+}
+
+/**
+ * EPL wrapper to log Raspberry Pi Info.
+ */
+event Info {
+	/** @private */
+	import "GPIOPlugin" as GPIOPlugin;
+
+	/**
+	 * Log the Raspberry Pi Info.
+	 */
+	action getInfo() {
+		log "GPIOPlugin info - " + GPIOPlugin.info() at INFO;
+	}
+}
+
+/**
+ * EPL representation of a GPIO pin.
+ */
+event Pin {
+	/** @private */
+	import "GPIOPlugin" as GPIOPlugin;
+	/** @private */
+	import "TimeFormatPlugin" as TimeFormatPlugin;
+	/** @private */
+	integer pin;
+
+	constant integer EDGE_FALLING := 1;
+	constant integer EDGE_RISING  := 2;
+	constant integer EDGE_BOTH    := 3;
+
+	/**
+	 * Initialise the pin.
+	 *
+	 * @param pin The Broadcom GPIO Pin number.
+	 * @param initValue Initial value to write to the pin.
+	 */
+	action init(integer pin, boolean initValue) {
+		self.pin := pin;
+
+		set(initValue);
+	}
+	
+	/**
+	 * Create a pin object.
+	 *
+	 * @param pin The Broadcom GPIO Pin number.
+	 * @param initValue Initial value to write to the pin.
+	 * @returns A Pin object
+	 */
+	action create(integer pin, boolean initValue) returns Pin {
+		init(pin, initValue);
+		
+		return self;
+	}
+
+	/**
+	 * Set the pin to on.
+	 */
+	action setOn() { set(true); }
+
+	/**
+	 * Set the pin to off.
+	 */
+	action setOff() { set(false); }
+	
+	/**
+	 * Set the pin to the supplied value.
+	 *
+	 * @param value The value to set the pin to.
+	 */
+	action set(boolean value) { GPIOPlugin.write(pin, value); }
+
+	/*
+	 * Pulse the pin to on for t seconds. Won't do anything if T is
+	 * greater than 1ms since the implementation spins for the period
+	 * of the pulse.
+	 *
+	 * @param t seconds to pulse and spin/block for.
+	 */
+	action pulseSpinning(float t) {
+		if t > 1e3 or t < 0.0 then {
+			log "Illegal time passed to Pin.pulseSpinning(): " + t.toString() at ERROR;
+			return;
+		}
+		
+		setOn();
+		float target := TimeFormatPlugin.getMicroTime() + t;
+		while TimeFormatPlugin.getMicroTime() < target {}
+		setOff();
+	}
+
+	/*
+	 * Start doing software pulse width modulation on the pin with
+	 * a duty cycle of dutycycle. Note that this cannot be switched
+	 * off once started, other than switching the duty cycle to zero.
+	 *
+	 * @param dutycycle The duty cycle.
+	 */
+	action softPWM(float dutycycle) {
+		GPIOPlugin.softPWM(pin, dutycycle);
+	}
+
+	/**
+	 * Enquire the active state of the pin.
+	 *
+	 * @returns The state of the pin.
+	 */
+	action isActive() returns boolean { return GPIOPlugin.read(pin); }
+	
+	/**
+	 * Watch the pin for an interupt triggered on either edge or both
+	 * depending on whether the edge parameter is EDGE_FALLING,
+	 * EDGE_RISING or EDGE_BOTH.  Setup a listener for event Interrupt(pin)
+	 *
+	 * @param edge Which edge to watch for.
+	 *
+	 * @routes Interrupt
+	 */
+	action watch(integer edge) { GPIOPlugin.watch(pin,edge); }
+	
+	/**
+	 * Watch the pin for an interupt with a callback, with the interrupt
+	 * triggered on either edge or both depending on whether the edge
+	 * parameter is EDGE_FALLING, EDGE_RISING or EDGE_BOTH.
+	 *
+	 * @param edge Which edge to watch for.
+	 * @param callback The callback when interrupted
+	 */
+	action watchCb(integer edge, action <integer> callback) {
+		watch(edge);
+		on all Interrupt(pin) {
+			callback(pin);
+		}
+	}
+	
+	/**
+	 * Block this processing context.
+	 *
+	 * @param The number of milliseconds to block for.
+	 */
+	action block(integer ms) { GPIOPlugin.block(ms); }
+}
+
+// ***************************
+// Output Devices
+// ***************************
+
+/**
+ * EPL representation of a Light Emmiting Diode.
+ */
+event LED {
+
+	/** @private */
+	Pin __pin;
+	
+	/**
+	 * Initialise the LED.
+	 *
+	 * @param pin The Broadcom GPIO Pin number.
+	 * @param initValue Initial value to write to the LED.
+	 * @returns An LED object
+	 */
+	action init(integer pin, boolean initValue) returns LED {
+		__pin.init(pin, initValue);
+		return self;
+	}
+
+	/**
+	 * Set the LED to on.
+	 */
+	action setOn() { __pin.setOn(); }
+
+	/**
+	 * Set the LED to off.
+	 */
+	action setOff() { __pin.setOff(); }
+	
+	/**
+	 * Set the LED to the supplied value.
+	 *
+	 * @param value The value to set the pin to.
+	 */
+	action set(boolean value) { __pin.set(value); }
+
+	/**
+	 * Enquire the lit state of the LED.
+	 *
+	 * @returns The state of the LED.
+	 */
+	action isLit() returns boolean { return __pin.isActive(); }
+}
+
+/**
+ * EPL representation of a Buzzer.
+ */
+event Buzzer {
+
+	/** @private */
+	Pin __pin;
+	
+	/**
+	 * Initialise the Buzzer.
+	 *
+	 * @param pin The Broadcom GPIO Pin number.
+	 * @param initValue Initial value to write to the Buzzer.
+	 * @returns A Buzzer object
+	 */
+	action init(integer pin, boolean initValue) returns Buzzer {
+		__pin.init(pin, initValue);
+		return self;
+	}
+
+	/**
+	 * Set the Buzzer to on.
+	 */
+	action setOn() { __pin.setOn(); }
+
+	/**
+	 * Set the Buzzer to off.
+	 */
+	action setOff() { __pin.setOff(); }
+	
+	/**
+	 * Set the Buzzer to the supplied value.
+	 *
+	 * @param value The value to set the pin to.
+	 */
+	action set(boolean value) { __pin.set(value); }
+	
+	/**
+	 * Sound a Morse Code Dot.
+	 */
+	 action morseDot() {
+		setOn();
+		__pin.block(100);
+		setOff();
+		__pin.block(100);
+	}
+	
+	/**
+	 * Sound a Morse Code Dash.
+	 */
+	action morseDash() {
+		setOn();
+		__pin.block(300);
+		setOff();
+		__pin.block(100);
+	}
+	
+	/**
+	 * Sound a Morse Code letter S.
+	 */
+	action morseS() {
+		morseDot();
+		morseDot();
+		morseDot();
+	}
+	
+	/**
+	 * Sound a Morse Code letter O.
+	 */
+	action morseO() {
+		morseDash();
+		morseDash();
+		morseDash();
+	}
+}
+
+// ***************************
+// Input Devices
+// ***************************
+
+/**
+ * Button Push event.
+ */
+event ButtonPush {
+	integer pin;
+}
+
+/**
+ * EPL representation of a Button.
+ */
+event Button {
+	
+	/** @private */
+	Pin __pin;
+
+	/**
+	 * Initialise the Button.  Button pushes can be detected by listening for the ButtonPush event.
+	 *
+	 * @param pin The Broadcom GPIO Pin number.
+	 * @returns A Button object
+	 * @routes ButtonPush
+	 */
+	action init(integer pin) returns Button {
+		return initCb(pin, __dummyCb);
+	}
+	
+	/**
+	 * Initialise the Button with a callback for when the button is pushed.
+	 *
+	 * @param pin The Broadcom GPIO Pin number.
+	 * @param callback The button push callback.
+	 * @returns A Button object
+	 */
+	action initCb(integer pin, action <integer> callback) returns Button {
+		__pin.init(pin, false);
+		__pin.watchCb(Pin.EDGE_FALLING, callback);
+		
+		return self;
+	}
+	
+	/** @private */
+	action __dummyCb(integer pin) {
+		route ButtonPush(pin);
+	}
+}
