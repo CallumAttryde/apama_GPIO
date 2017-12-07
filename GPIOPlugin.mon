@@ -56,11 +56,10 @@ event Info {
 	import "GPIOPlugin" as GPIOPlugin;
 
 	/**
-	 * Log the Raspberry Pi Info.
+	 * Return the Raspberry Pi Info.
 	 */
-	action getInfo() {
-	// TODO change this to return a dictionary<string, string>
-	//	log "GPIOPlugin info - " + GPIOPlugin.info() at INFO;
+	action getInfo() returns dictionary<string, string> {
+		return GPIOPlugin.info();
 	}
 }
 
@@ -147,9 +146,9 @@ event Pin {
 	 *
 	 * @param dutycycle The duty cycle.
 	 */
-//	action softPWM(float dutycycle) {
-//		GPIOPlugin.softPWM(pin, dutycycle);
-//	}
+	action softPWM(float dutycycle) {
+		GPIOPlugin.softPWM(pin, dutycycle);
+	}
 
 	/**
 	 * Enquire the active state of the pin.

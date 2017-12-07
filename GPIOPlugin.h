@@ -46,7 +46,7 @@ public:
 	void block(int64_t milliseconds);
 
 	/** */
-	void softPWM(int64_t pinId, float dutyCycle);
+	void softPWM(int64_t pinId, double dutyCycle);
 
 private:
 	/** Table recording if each pin has softPWM enabled */
