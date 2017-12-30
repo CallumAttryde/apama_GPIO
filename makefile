@@ -4,9 +4,14 @@
 # $Copyright (c) 2016 Software AG, Darmstadt, Germany and/or Software AG USA Inc., Reston, VA, USA, and/or its subsidiaries and/or its affiliates and/or their licensors.$
 # Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with Software AG
 
+# Make sure the required Apama envars have been defined
 ifndef APAMA_HOME
-home_not_set:
-	@echo Please set the APAMA_HOME environment variable
+$(warning Did you remember to source the apama_env script?)
+$(error APAMA_HOME is not defined)
+endif
+ifndef APAMA_WORK
+$(warning Did you remember to source the apama_env script?)
+$(error APAMA_WORK is not defined)
 endif
 
 # C++ compiler
@@ -45,10 +50,10 @@ $(BINDIR)/libGPIOPlugin.so: $(OBJDIR)/$(GPIOPLUGIN-OBJ)
 	$(CXX) -o $@ $(OBJDIR)/$(GPIOPLUGIN-OBJ) $(LDFLAGS) -lwiringPi
 	
 install:
-	mkdir -p $(APAMA_HOME)/lib
-	mkdir -p $(APAMA_HOME)/monitors
-	cp $(BINDIR)/libGPIOPlugin.so $(APAMA_HOME)/lib
-	cp GPIOPlugin.mon $(APAMA_HOME)/monitors
+	mkdir -p $(APAMA_WORK)/lib
+	mkdir -p $(APAMA_WORK)/monitors
+	cp $(BINDIR)/libGPIOPlugin.so $(APAMA_WORK)/lib
+	cp GPIOPlugin.mon $(APAMA_WORK)/monitors
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
