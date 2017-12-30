@@ -59,7 +59,7 @@ event Info {
 	 * Return the Raspberry Pi Info.
 	 */
 	action getInfo() returns dictionary<string, string> {
-		return GPIOPlugin.info();
+		return GPIOPlugin.getInfo();
 	}
 }
 
