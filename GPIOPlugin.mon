@@ -57,7 +57,7 @@ event Info {
 	/**
 	 * Return the Raspberry Pi Info.
 	 */
-	action getInfo() returns dictionary<string, string> {
+	static action getInfo() returns dictionary<string, string> {
 		return GPIOPlugin.getInfo();
 	}
 }
@@ -279,16 +279,6 @@ event LED {
 	}
 
 	/**
-	 * Set the LED to on.
-	 */
-	action setOn() { __pin.setOn(); }
-
-	/**
-	 * Set the LED to off.
-	 */
-	action setOff() { __pin.setOff(); }
-	
-	/**
 	 * Set the LED to the supplied value.
 	 *
 	 * @param value The value to set the pin to.
@@ -296,11 +286,21 @@ event LED {
 	action set(boolean value) { __pin.set(value); }
 
 	/**
+	 * Set the LED to on.
+	 */
+	action setOn() { set(true); }
+
+	/**
+	 * Set the LED to off.
+	 */
+	action setOff() { set(false); }
+
+	/**
 	 * Enquire the lit state of the LED.
 	 *
 	 * @returns The state of the LED.
 	 */
-	action isLit() returns boolean { return __pin.isActive(); }
+	action isHigh() returns boolean { return __pin.isActive(); }
 	
 	/**
 	* Convert the given string into MorseCode.

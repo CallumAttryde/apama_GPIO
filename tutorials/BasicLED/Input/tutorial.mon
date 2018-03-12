@@ -1,6 +1,11 @@
 using com.apamax.rpi.gpio.Setup;
 using com.apamax.rpi.gpio.LED;
 
+event Step
+{
+	integer i;
+}
+
 monitor BasicLED {
 
 	action onload() {
@@ -15,10 +20,19 @@ monitor BasicLED {
 		
 		// Turn the LED on
 		led.setOn();
-		
-		// Wait 5 seconds and turn the LED off
-		on wait(5.0) {
+		if not (led.isHigh()) {
+			log "TEST FAILED";
+		}
+		log "LED on";
+
+		on Step(1)
+		{
+			// Turn the LED off
 			led.setOff();
+			if (led.isHigh()) {
+				log "TEST FAILED";
+			}
+			log "LED off";
 		}
 	}
 }
