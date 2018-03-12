@@ -41,7 +41,7 @@
 	<property file="${osfamily}.properties" />
 
 	<!-- Add the src location (relative to the project root) to the python path -->
-	<path value="./src" relative="true"/>
+	<path value="./test" relative="true"/>
 
 	<!-- 
 	Use a custom runner class that extends the BaseRunner class distributed with PySys. Extensions to 
