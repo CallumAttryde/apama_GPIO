@@ -19,7 +19,6 @@ monitor BasicLED {
 		// Wait 5 seconds and turn the LED off
 		on wait(5.0) {
 			led.setOff();
-			led.convertToMorseCode("sos");
 		}
 	}
 }
