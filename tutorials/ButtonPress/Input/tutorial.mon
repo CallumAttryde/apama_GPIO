@@ -14,5 +14,7 @@ monitor ButtonPress {
 		on all com.apamax.rpi.gpio.ButtonPush(pin=buttonPin) {
 			log "Button Pressed" at INFO;
 		}
+
+		log "Monitor Loaded" at INFO;
 	}
 }
