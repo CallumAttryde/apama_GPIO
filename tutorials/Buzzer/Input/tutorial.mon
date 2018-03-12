@@ -12,8 +12,5 @@ monitor Buzzer {
 		
 		// Sound Morse Code SOS
 		buzzer.convertToMorseCode("sos");
-		
-		// Turn the annoying buzzer off!
-		buzzer.setOff();
 	}
 }
