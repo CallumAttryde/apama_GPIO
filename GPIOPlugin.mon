@@ -57,7 +57,7 @@ event Info {
 	/**
 	 * Return the Raspberry Pi Info.
 	 */
-	static action getInfo() returns dictionary<string, string> {
+	action getInfo() returns dictionary<string, string> {
 		return GPIOPlugin.getInfo();
 	}
 }
@@ -215,23 +215,8 @@ event MorseCode	{
 	}
 	
 	/**
-	 * Sound a Morse Code letter S.
-	 */
-	static action morseS(Pin _pin) {
-		morseDot(_pin);
-		morseDot(_pin);
-		morseDot(_pin);
-	}
-	
-	/**
-	 * Sound a Morse Code letter O.
-	 */
-	static action morseO(Pin _pin) {
-		morseDash(_pin);
-		morseDash(_pin);
-		morseDash(_pin);
-	}
-
+	* Convert the string into morse code
+	*/
 	static action convertToMorseCode(string morseStr, Pin _pin){
 		dictionary<string,string> morseCode := {"A":".-", "B":"-...", "C":"-.-.", "D":"-..", "E":".", "F":"..-.", "G":"--.", "H":"....", "I":"..", "J":".---", "K":"-.-", "L":".-..", "M":"--", "N":"-.", "O":"---", "P":".--.", "Q":"--.-", "R":".-.", "S":"...", "T":"-", "U":"..-", "V":"...-", "W":".--", "X":"-..-", "Y":"-.--", "Z":"--.."};
 
@@ -250,19 +235,25 @@ event MorseCode	{
 					string singleMorseElement := morseCharRep.substring(y, y+1);
 					if (singleMorseElement != ""){
 						if (singleMorseElement = "."){
+							log "DOT" at INFO;
 							morseDot(_pin);
 						}
 						else if (singleMorseElement = "-"){
+							log "DASH " at INFO;
 							morseDash(_pin);			
 						}
 					}
 					y:=y+1;
 				}
 			}
+			else if (morseCharRep = " "){
+				_pin.block(300);
+			}
 			else{
 				log "This character is currently not supported for morseCode Translation " + thisChar at INFO;
 			}
-			i:=i+1;
+			i:=i+1;			
+			_pin.block(300);
 		}
 	}
 }
