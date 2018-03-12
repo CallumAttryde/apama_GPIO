@@ -8,7 +8,7 @@ monitor BasicLED {
 		(new Setup).setOutputPins([17]).init();
 
 		// Log the Raspberry Pi info to the correlator log
-		(new com.apamax.rpi.gpio.Info).getInfo();
+		log com.apamax.rpi.gpio.Info.getInfo().toString();
 		
 		// Create an LED event on pin 17
 		LED led := (new LED).init(17, false);
