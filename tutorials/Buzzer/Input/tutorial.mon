@@ -11,9 +11,7 @@ monitor Buzzer {
 		Buzzer buzzer := (new Buzzer).init(13, false);
 		
 		// Sound Morse Code SOS
-		buzzer.morseS();
-		buzzer.morseO();
-		buzzer.morseS();
+		buzzer.convertToMorseCode("sos");
 		
 		// Turn the annoying buzzer off!
 		buzzer.setOff();

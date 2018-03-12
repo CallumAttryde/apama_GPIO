@@ -4,7 +4,6 @@ package com.apamax.rpi.gpio;
 event Interrupt {
 	integer pin;
 }
-
 /**
  * EPL wrapper for GPIO access setup.  Used so we don't have to run as root.
  */
@@ -194,6 +193,79 @@ event Pin {
 // ***************************
 // Output Devices
 // ***************************
+event MorseCode	{
+	/**
+	 * Sound a Morse Code Dot.
+	 */
+	 static action morseDot(Pin _pin) {
+		_pin.setOn();
+		_pin.block(100);
+		_pin.setOff();
+		_pin.block(100);
+	}
+	
+	/**
+	* Sound a Morse Code Dash.
+	 */
+	static action morseDash(Pin _pin) {
+		_pin.setOn();
+		_pin.block(300);
+		_pin.setOff();
+		_pin.block(100);
+	}
+	
+	/**
+	 * Sound a Morse Code letter S.
+	 */
+	static action morseS(Pin _pin) {
+		morseDot(_pin);
+		morseDot(_pin);
+		morseDot(_pin);
+	}
+	
+	/**
+	 * Sound a Morse Code letter O.
+	 */
+	static action morseO(Pin _pin) {
+		morseDash(_pin);
+		morseDash(_pin);
+		morseDash(_pin);
+	}
+
+	static action convertToMorseCode(string morseStr, Pin _pin){
+		dictionary<string,string> morseCode := {"A":".-", "B":"-...", "C":"-.-.", "D":"-..", "E":".", "F":"..-.", "G":"--.", "H":"....", "I":"..", "J":".---", "K":"-.-", "L":".-..", "M":"--", "N":"-.", "O":"---", "P":".--.", "Q":"--.-", "R":".-.", "S":"...", "T":"-", "U":"..-", "V":"...-", "W":".--", "X":"-..-", "Y":"-.--", "Z":"--.."};
+
+		integer i := 0;
+		string upperStr := morseStr.toUpper();
+
+		while (i < morseStr.length()){
+			string thisChar := upperStr.substring(i, i+1);
+			//Lookup morseCode strings representations
+			
+			string morseCharRep := morseCode[thisChar];
+			if (morseCharRep!= ""){
+				integer y := 0;
+				while (y < morseCharRep.length()){
+					//call morseDash or moseDash
+					string singleMorseElement := morseCharRep.substring(y, y+1);
+					if (singleMorseElement != ""){
+						if (singleMorseElement = "."){
+							morseDot(_pin);
+						}
+						else if (singleMorseElement = "-"){
+							morseDash(_pin);			
+						}
+					}
+					y:=y+1;
+				}
+			}
+			else{
+				log "This character is currently not supported for morseCode Translation " + thisChar at INFO;
+			}
+			i:=i+1;
+		}
+	}
+}
 
 /**
  * EPL representation of a Light Emmiting Diode.
@@ -238,6 +310,15 @@ event LED {
 	 * @returns The state of the LED.
 	 */
 	action isLit() returns boolean { return __pin.isActive(); }
+	
+	/**
+	* Convert the given string into MorseCode.
+	*
+	* @param morseStr The String to convert into MorseCode.
+	*/
+	action convertToMorseCode(string morseStr){
+		MorseCode.convertToMorseCode(morseStr, __pin);
+	}
 }
 
 /**
@@ -276,45 +357,18 @@ event Buzzer {
 	 * @param value The value to set the pin to.
 	 */
 	action set(boolean value) { __pin.set(value); }
-	
+
 	/**
-	 * Sound a Morse Code Dot.
-	 */
-	 action morseDot() {
-		setOn();
-		__pin.block(100);
-		setOff();
-		__pin.block(100);
-	}
-	
-	/**
-	 * Sound a Morse Code Dash.
-	 */
-	action morseDash() {
-		setOn();
-		__pin.block(300);
-		setOff();
-		__pin.block(100);
-	}
-	
-	/**
-	 * Sound a Morse Code letter S.
-	 */
-	action morseS() {
-		morseDot();
-		morseDot();
-		morseDot();
-	}
-	
-	/**
-	 * Sound a Morse Code letter O.
-	 */
-	action morseO() {
-		morseDash();
-		morseDash();
-		morseDash();
+	* Convert the given string into MorseCode.
+	*
+	* @param morseStr The String to convert into MorseCode.
+	*/
+	action convertToMorseCode(string morseStr){
+		MorseCode.convertToMorseCode(morseStr, __pin);
 	}
 }
+
+
 
 // ***************************
 // Input Devices
