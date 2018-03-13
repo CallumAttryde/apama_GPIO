@@ -194,14 +194,17 @@ event Pin {
 // Output Devices
 // ***************************
 event MorseCode	{
+	// A single time unit. All elements of morse code are based on this, and can be configured by changing this value (number of TimeUnits for each element based on this article: https://en.wikipedia.org/wiki/Morse_code#Representation,_timing,_and_speeds)
+	integer TimeUnit := 100;
+
 	/**
 	 * Sound a Morse Code Dot.
 	 */
 	 static action morseDot(Pin _pin) {
 		_pin.setOn();
-		_pin.block(100);
+		// Dot, 1 time unit
+		_pin.block(TimeUnit);
 		_pin.setOff();
-		_pin.block(100);
 	}
 	
 	/**
@@ -209,9 +212,9 @@ event MorseCode	{
 	 */
 	static action morseDash(Pin _pin) {
 		_pin.setOn();
-		_pin.block(300);
+		// Dash, 3 time units
+		_pin.block(3 * TimeUnit);
 		_pin.setOff();
-		_pin.block(100);
 	}
 	
 	/**
@@ -244,16 +247,20 @@ event MorseCode	{
 						}
 					}
 					y:=y+1;
+					// Inter element delay, 1 time unit
+					_pin.block(TimeUnit);
 				}
 			}
 			else if (morseCharRep = " "){
-				_pin.block(300);
+				// Inter word delay, 7 time units but we put 4 here because it will concatenate with the inter character delay to make 7 units
+				_pin.block(4 * TimeUnit);
 			}
 			else{
 				log "This character is currently not supported for morseCode Translation " + thisChar at INFO;
 			}
-			i:=i+1;			
-			_pin.block(300);
+			i:=i+1;
+			// Inter character delay, 3 time units
+			_pin.block(3 * TimeUnit);
 		}
 	}
 }
