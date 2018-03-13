@@ -8,8 +8,7 @@ before_script:
 script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - docker build -t apama_gpio/test .
-  # we now have a docker image a raspbian correlator
-  # now we must start our tests, each with its own container
 
-  - docker run -it test make
-  - docker run -it test python pysys run
+  - docker run -it --privileged apama_gpio/test bash -c "source /opt/apamacce/bin/apama_env"
+  - docker run -it apama_gpio/test make /opt/
+  # cd into tutorials and pysys run
