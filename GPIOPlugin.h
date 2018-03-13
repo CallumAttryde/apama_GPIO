@@ -33,6 +33,12 @@ public:
 	/** Get info regarding this board */
 	com::softwareag::connectivity::map_t getInfo();
 
+	com::softwareag::connectivity::list_t convertToBitSequence(const com::softwareag::connectivity::data_t& value);
+	com::softwareag::connectivity::list_t convertToBitSequence(int64_t value);
+	com::softwareag::connectivity::list_t convertToBitSequence(double value);
+	com::softwareag::connectivity::list_t convertToBitSequence(com::softwareag::connectivity::decimal_t value);
+	com::softwareag::connectivity::list_t convertToBitSequence(const char* value);
+
 	/**  */
 	void watch(int64_t pinId, int64_t eplEdge);
 

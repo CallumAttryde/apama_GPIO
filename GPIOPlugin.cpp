@@ -43,6 +43,7 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
+	md.registerMethod<decltype(&GPIOPlugin::convertToBitSequence), &GPIOPlugin::convertToBitSequence>("convertToBitSequence", "action<any> returns sequence<bool>");
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -74,6 +75,85 @@ map_t GPIOPlugin::getInfo()
 		std::make_pair(data_t("OverVolt"), data_t((int64_t)overVolt))
 	};
 	return info;
+}
+
+list_t GPIOPlugin::convertToBitSequence(const data_t& value)
+{
+	switch( value.type_tag() )
+	{
+		case SAG_DATA_INTEGER:
+		{
+			convertToBitSequence(value.get<int64_t>());
+		}
+		break;
+		case SAG_DATA_DOUBLE:
+		{
+			convertToBitSequence(value.get<double>());
+		}
+		break;
+		case SAG_DATA_DECIMAL:
+		{
+			convertToBitSequence(value.get<decimal_t>());
+		}
+		break;
+		case SAG_DATA_STRING:
+		{
+			convertToBitSequence(value.get<const char*>());
+		}
+		break;
+	}
+}
+
+list_t GPIOPlugin::convertToBitSequence(int64_t value)
+{
+	list_t result;
+	int numBits = numeric_limits<int64_t>::digits;
+	int64_t maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}
+
+list_t GPIOPlugin::convertToBitSequence(double value)
+{
+	list_t result;
+	int numBits = numeric_limits<double>::digits;
+	double maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}
+
+list_t GPIOPlugin::convertToBitSequence(decimal_t value)
+{
+	list_t result;
+	int numBits = numeric_limits<decimal_t>::digits;
+	decimal_t maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}
+
+list_t GPIOPlugin::convertToBitSequence(const char* value)
+{
+	list_t result;
+	int numBits = 4;
+	char maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
 }
 
 void GPIOPlugin::watch(int64_t pinId, int64_t eplEdge)
