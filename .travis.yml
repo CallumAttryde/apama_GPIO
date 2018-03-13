@@ -1,17 +1,15 @@
 sudo: required
-
 services:
   - docker
 
-install: true
-
 before_script:
-  - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
-  - echo ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:' | sudo tee -a /proc/sys/fs/binfmt_misc/register
-  - docker pull sedden/rpi-raspbian-qemu:wheezy
+  - docker pull resin/rpi-raspbian
 
 script:
-  - docker build -t au/test .
-  - docker run -it au/test uname -a
-  - docker run -it au/test go version
-  - docker run -it au/test make check
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - docker build -t apama_gpio/test .
+  # we now have a docker image a raspbian correlator
+  # now we must start our tests, each with its own container
+
+  - docker run -it test make
+  - docker run -it test python pysys run
