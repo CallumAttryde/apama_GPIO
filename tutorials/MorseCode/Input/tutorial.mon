@@ -1,0 +1,66 @@
+using com.apamax.rpi.gpio.Setup;
+using com.apamax.rpi.gpio.Buzzer;
+using com.apamax.rpi.gpio.LED;
+
+event CreateBuzzer
+{
+	integer pinID;
+}
+
+event CreateLED
+{
+	integer pinID;
+}
+
+event ConvertToMorseCode
+{
+	string toConvert;
+}
+
+monitor MorseCode {
+
+	action onload() {
+		// Setup GPIO access to the pins
+		(new Setup).setOutputPins([13,17]).init();
+
+		// Create a buszer on pin 13
+		send CreateBuzzer(13);
+		// create an LED on pin 17
+		send CreateLED(17);
+
+		// Tell all buzzers and LEDs to convert the string to morse code
+		send ConvertToMorseCode("sos");
+	}
+}
+
+monitor BuzzerMorseCode
+{
+	Buzzer buzzer;
+
+	action onload() {
+		on CreateBuzzer as cb {
+			buzzer := (new Buzzer).init(cb.pinID, false)
+		}
+
+		on all ConvertToMorseCode() as mc
+		{
+			buzzer.convertToMorseCode(mc.toConvert);
+		}
+	}
+}
+
+monitor LEDMorseCode
+{
+	LED led;
+
+	action onload(int pin) {
+		on CreateLED as cl {
+			led := (new LED).init(cl.pinID, false)
+		}
+		
+		on all ConvertToMorseCode() as mc
+		{
+			led.convertToMorseCode(mc.toConvert);
+		}
+	}
+}
