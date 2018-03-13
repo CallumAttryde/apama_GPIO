@@ -10,7 +10,21 @@ monitor Buzzer {
 		// Create a Buzzer event on pin 13
 		Buzzer buzzer := (new Buzzer).init(13, false);
 		
-		// Sound Morse Code SOS
-		buzzer.convertToMorseCode("sos");
+		// Turn the Buzzer on
+		buzzer.setOn();
+		if not (buzzer.isHigh()) {
+			log "TEST FAILED";
+		}
+		log "Buzzer on";
+
+		on Step(1)
+		{
+			// Turn the buzzer off
+			buzzer.setOff();
+			if (buzzer.isHigh()) {
+				log "TEST FAILED";
+			}
+			log "Buzzer off";
+		}
 	}
 }
