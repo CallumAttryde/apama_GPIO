@@ -194,33 +194,31 @@ event Pin {
 // Output Devices
 // ***************************
 event MorseCode	{
-	// A single time unit. All elements of morse code are based on this, and can be configured by changing this value (number of TimeUnits for each element based on this article: https://en.wikipedia.org/wiki/Morse_code#Representation,_timing,_and_speeds)
-	integer TimeUnit := 100;
-
 	/**
 	 * Sound a Morse Code Dot.
 	 */
-	 static action morseDot(Pin _pin) {
+	 static action morseDot(Pin _pin, integer timeUnit) {
 		_pin.setOn();
 		// Dot, 1 time unit
-		_pin.block(TimeUnit);
+		_pin.block(timeUnit);
 		_pin.setOff();
 	}
 	
 	/**
 	* Sound a Morse Code Dash.
 	 */
-	static action morseDash(Pin _pin) {
+	static action morseDash(Pin _pin, integer timeUnit) {
 		_pin.setOn();
 		// Dash, 3 time units
-		_pin.block(3 * TimeUnit);
+		_pin.block(3 * timeUnit);
 		_pin.setOff();
 	}
 	
 	/**
 	* Convert the string into morse code
+	* @param timeUnit - A single time unit. All elements of morse code are based on this, and can be configured by changing this value (number of TimeUnits for each element based on this article: https://en.wikipedia.org/wiki/Morse_code#Representation,_timing,_and_speeds)
 	*/
-	static action convertToMorseCode(string morseStr, Pin _pin){
+	static action convertToMorseCode(string morseStr, Pin _pin, integer timeUnit){
 		dictionary<string,string> morseCode := {"A":".-", "B":"-...", "C":"-.-.", "D":"-..", "E":".", "F":"..-.", "G":"--.", "H":"....", "I":"..", "J":".---", "K":"-.-", "L":".-..", "M":"--", "N":"-.", "O":"---", "P":".--.", "Q":"--.-", "R":".-.", "S":"...", "T":"-", "U":"..-", "V":"...-", "W":".--", "X":"-..-", "Y":"-.--", "Z":"--.."};
 
 		integer i := 0;
@@ -239,28 +237,28 @@ event MorseCode	{
 					if (singleMorseElement != ""){
 						if (singleMorseElement = "."){
 							log "DOT" at INFO;
-							morseDot(_pin);
+							morseDot(_pin, timeUnit);
 						}
 						else if (singleMorseElement = "-"){
 							log "DASH " at INFO;
-							morseDash(_pin);			
+							morseDash(_pin, timeUnit);
 						}
 					}
 					y:=y+1;
 					// Inter element delay, 1 time unit
-					_pin.block(TimeUnit);
+					_pin.block(timeUnit);
 				}
 			}
 			else if (morseCharRep = " "){
 				// Inter word delay, 7 time units but we put 4 here because it will concatenate with the inter character delay to make 7 units
-				_pin.block(4 * TimeUnit);
+				_pin.block(4 * timeUnit);
 			}
 			else{
 				log "This character is currently not supported for morseCode Translation " + thisChar at INFO;
 			}
 			i:=i+1;
 			// Inter character delay, 3 time units
-			_pin.block(3 * TimeUnit);
+			_pin.block(3 * timeUnit);
 		}
 	}
 }
@@ -315,7 +313,7 @@ event LED {
 	* @param morseStr The String to convert into MorseCode.
 	*/
 	action convertToMorseCode(string morseStr){
-		MorseCode.convertToMorseCode(morseStr, __pin);
+		MorseCode.convertToMorseCode(morseStr, __pin, 100);
 	}
 }
 
@@ -362,7 +360,7 @@ event Buzzer {
 	* @param morseStr The String to convert into MorseCode.
 	*/
 	action convertToMorseCode(string morseStr){
-		MorseCode.convertToMorseCode(morseStr, __pin);
+		MorseCode.convertToMorseCode(morseStr, __pin, 100);
 	}
 }
 
