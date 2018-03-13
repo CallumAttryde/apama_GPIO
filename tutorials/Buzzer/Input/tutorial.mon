@@ -1,11 +1,19 @@
 using com.apamax.rpi.gpio.Setup;
 using com.apamax.rpi.gpio.Buzzer;
 
+event Step
+{
+	integer i;
+}
+
 monitor Buzzer {
 
 	action onload() {
 		// Setup GPIO access to the pins
 		(new Setup).setOutputPins([13]).init();
+
+		// Log the Raspberry Pi info to the correlator log
+		log com.apamax.rpi.gpio.Info.getInfo().toString();
 
 		// Create a Buzzer event on pin 13
 		Buzzer buzzer := (new Buzzer).init(13, false);

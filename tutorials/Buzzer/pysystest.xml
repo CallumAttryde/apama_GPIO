@@ -2,7 +2,7 @@
 <pysystest type="auto" state="runnable">
     
   <description> 
-    <title>Sounds Morse Code SOS on a buzzer on pin 13</title>    
+    <title>Toggle a buzzer on pin 13 every 5 seconds</title>    
     <purpose></purpose>
   </description>
 
