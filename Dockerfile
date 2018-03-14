@@ -22,7 +22,12 @@ RUN \
 	git pull origin && \
 	./build
 
-RUN apt-get install -y python-rpi.gpio
+#RUN apt-get install -y python-rpi.gpio
+RUN \
+	cd /home/ && \
+	git clone https://github.com/metachris/RPIO.git --branch v2 --single-branch && \
+	cd RPIO && \
+	python setup.py install
 
 RUN \
 	ACCE_BASE_URL="https://downloads.apamacommunity.com/apama-core/10.1.0.4" && \
