@@ -44,5 +44,3 @@ ENV \
 	LD_LIBRARY_PATH=/opt/apamacce/lib:$LD_LIBRARY_PATH
 
 EXPOSE 15903
-
-#CMD=["/bin/bash", "source /opt/apamacce/bin/apama_env", "cd /opt/", "make", "cd tutorials", "pysys run BasicLED"]
