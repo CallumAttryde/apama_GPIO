@@ -8,4 +8,5 @@ before_script:
 script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - docker build -t apama_gpio/test .
-  - docker run --rm --privileged apama_gpio/test bash -c "source /opt/apamacce/bin/apama_env; cd /opt/; make; cd tutorials; pysys run BasicLED"
+  - docker run --rm apama_gpio/test bash -c "source /opt/apamacce/bin/apama_env; correlator"
+#  - docker run --rm --privileged apama_gpio/test bash -c "source /opt/apamacce/bin/apama_env; cd /opt/; make; cd tutorials; pysys run BasicLED"
