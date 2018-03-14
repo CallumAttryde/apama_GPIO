@@ -1,0 +1,63 @@
+using com.apamax.rpi.gpio.Setup;
+using com.apamax.rpi.gpio.LED;
+
+event ActivateSoftPWM
+{
+	float dutyCycle;
+	float range;
+}
+
+monitor BasicLED {
+	/** @private */
+	import "GPIOPlugin" as GPIOPlugin;
+
+	action onload() {
+		// Setup GPIO access to the pins
+		(new Setup).setOutputPins([18]).init();
+
+		// Log the Raspberry Pi info to the correlator log
+		log com.apamax.rpi.gpio.Info.getInfo().toString();
+		
+		// Create an LED event on pin 18
+		LED led := (new LED).init(18, false);
+		
+		// Turn the LED off
+		led.setOff();
+		if (led.isHigh()) {
+			log "TEST FAILED";
+		}
+		log "LED off";
+	
+		ActivateSoftPWM aspwm;		
+		on ActivateSoftPWM(): aspwm
+		{
+			integer loops := 5;
+			while (loops > 0)
+			{
+				led.createSoftPWM(aspwm.dutyCycle,aspwm.range);
+				float i:=0.0;
+				while i < aspwm.range
+				{
+					led.writeSoftPWM(i);
+					log "Write up " + i.toString() at INFO;
+					GPIOPlugin.block(25);		
+					i:=i+1.0;
+				}
+
+				while i > 0.0
+				{
+					led.writeSoftPWM(i);
+					log "Write Down " + i.toString() at INFO;
+					GPIOPlugin.block(25);		
+					i:=i-1.0;
+				}
+				loops := loops-1;
+			}
+			//Ensure the LED is turned off
+			led.writeSoftPWM(0.0);
+
+			log "Test Complete" at INFO;
+		}
+
+	}
+}
