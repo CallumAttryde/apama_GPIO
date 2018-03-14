@@ -134,7 +134,7 @@ void GPIOPlugin::exportPin(const int64_t pin, const char * mode)
 	os << pin;
 
 	std::vector<char*> argv;
-	argv.push_back("/usr/bin/gpio");
+	argv.push_back("/usr/local/bin/gpio");
 	argv.push_back("export");
 	argv.push_back(const_cast<char*>(os.str().c_str()));
 	argv.push_back(const_cast<char*>(mode));
@@ -143,7 +143,7 @@ void GPIOPlugin::exportPin(const int64_t pin, const char * mode)
 	int result = executeWait(&argv[0]);
 	if (0 != result) 
 	{
-		throw std::runtime_error("Failed to export pin '" + std::to_string(pin) + "', check '/usr/bin/gpio' exists.");
+		throw std::runtime_error("Failed to export pin '" + std::to_string(pin) + "', check '/usr/local/bin/gpio' exists.");
 	}
 }
 
