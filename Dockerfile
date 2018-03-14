@@ -27,7 +27,7 @@ RUN \
 	cd /home/ && \
 	git clone https://github.com/metachris/RPIO.git --branch v2 --single-branch && \
 	cd RPIO && \
-	python setup.py install
+	["/bin/bash", "-c", "python", "setup.py", "install"]
 
 RUN \
 	ACCE_BASE_URL="https://downloads.apamacommunity.com/apama-core/10.1.0.4" && \
