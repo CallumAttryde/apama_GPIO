@@ -17,6 +17,8 @@ RUN \
 	apt-get update && \
 	apt-get install -y build-essential && \
 	apt-get install -y git-core && \
+#	apt-get install -y python-pip && \
+#	pip install https://github.com/metachris/RPIO/archive/v2.zip && \
 	git clone git://git.drogon.net/wiringPi && \
 	cd wiringPi && \
 	git pull origin && \
@@ -42,3 +44,5 @@ ENV \
 	LD_LIBRARY_PATH=/opt/apamacce/lib:$LD_LIBRARY_PATH
 
 EXPOSE 15903
+
+#CMD=["/bin/bash", "source /opt/apamacce/bin/apama_env", "cd /opt/", "make", "cd tutorials", "pysys run BasicLED"]
