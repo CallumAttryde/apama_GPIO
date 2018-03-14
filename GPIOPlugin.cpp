@@ -42,7 +42,8 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::read), &GPIOPlugin::read>("read", "action<integer> returns boolean");
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
-	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
+	md.registerMethod<decltype(&GPIOPlugin::softPWMCreate), &GPIOPlugin::softPWMCreate>("softPWMCreate", "action<integer, float, float>");
+	md.registerMethod<decltype(&GPIOPlugin::softPWMWrite), &GPIOPlugin::softPWMWrite>("softPWMWrite", "action<integer, float>");
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -112,19 +113,37 @@ void GPIOPlugin::block(int64_t milliseconds)
 	delay(milliseconds);
 }
 
-void GPIOPlugin::softPWM(int64_t pinId, double dutyCycle)
+void GPIOPlugin::softPWMCreate(int64_t pinId, double dutyCycle, double range)
 {
 	checkPinValid(pinId);
-	int64_t value = dutyCycle * 100;
+
+	softPwmCreate(pinId, dutyCycle, range);
+	softPwmEnabled[pinId] = true;
+	if (digitalRead(pinId) == LOW){
+		pluginInstance->logger.info("***LOW/OFF");		
+	}
+	if (digitalRead(pinId) == HIGH){
+		pluginInstance->logger.info("***HIGH/ON");		
+	}
+}
+
+void GPIOPlugin::softPWMWrite(int64_t pinId, double dutyCycle)
+{
+	checkPinValid(pinId);
 
 	if (softPwmEnabled[pinId])
 	{
-		softPwmWrite(pinId, value);
+		softPwmWrite(pinId, dutyCycle);
+		if (digitalRead(pinId) == LOW){
+			pluginInstance->logger.info("***LOW/OFF");		
+		}
+		if (digitalRead(pinId) == HIGH){
+			pluginInstance->logger.info("***HIGH/ON");		
+		}
 	}
 	else
 	{
-		softPwmCreate(pinId, value, 100);
-		softPwmEnabled[pinId] = true;
+		pluginInstance->logger.error("This pin needs to first have a SoftPWM created on it with a valid range");		
 	}
 }
 

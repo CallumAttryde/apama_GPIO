@@ -45,8 +45,11 @@ public:
 	/** Block processing */
 	void block(int64_t milliseconds);
 
-	/** */
-	void softPWM(int64_t pinId, double dutyCycle);
+	/** Set a Pin up for Software Pulse Width Modulation */
+	void softPWMCreate(int64_t pinId, double dutyCycle, double range=0);
+
+	/** Change the duty cycle on a Pin already set up for Soft PWM*/
+	void softPWMWrite(int64_t pinId, double dutyCycle);
 
 private:
 	/** Table recording if each pin has softPWM enabled */

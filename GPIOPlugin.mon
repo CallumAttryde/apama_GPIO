@@ -139,14 +139,26 @@ event Pin {
 	}
 
 	/*
-	 * Start doing software pulse width modulation on the pin with
-	 * a duty cycle of dutycycle. Note that this cannot be switched
+	 * Set up this pin for doing software pulse width modulation with
+	 * an initial duty cycle value. Note that this cannot be switched
 	 * off once started, other than switching the duty cycle to zero.
+	 * Note: ensure it is connected to a capable pin.
+	 *
+	 * @param dutycycle The duty cycle.
+	 * @param range The range of values allowed for the dutyCycle.
+	 */
+	action createSoftPWM(float dutycycle, float range) {
+		GPIOPlugin.softPWMCreate(pin, dutycycle, range);
+	}
+
+	/*
+	 * Change the duty cycle value on this pin that has already been set
+	 * up for software pulse width modulation.
 	 *
 	 * @param dutycycle The duty cycle.
 	 */
-	action softPWM(float dutycycle) {
-		GPIOPlugin.softPWM(pin, dutycycle);
+	action writeSoftPWM(float dutycycle) {
+		GPIOPlugin.softPWMWrite(pin, dutycycle);
 	}
 
 	/**
@@ -315,6 +327,30 @@ event LED {
 	action convertToMorseCode(string morseStr){
 		MorseCode.convertToMorseCode(morseStr, __pin, 100);
 	}
+
+	/*
+	 * Set up this LED for doing software pulse width modulation with
+	 * an initial duty cycle value. Note that this cannot be switched
+	 * off once started, other than switching the duty cycle to zero.
+	 *
+	 * @param dutycycle The duty cycle.
+	 * @param range The range of values allowed for the dutyCycle.
+	 */
+	action createSoftPWM(float dutycycle, float range) {
+		__pin.createSoftPWM(dutycycle, range);
+	}
+
+	/*
+	 * Change the duty cycle value on this LED that has already been set
+	 * up for software pulse width modulation.
+	 *
+	 * @param dutycycle The duty cycle.
+	 */
+	action writeSoftPWM(float dutycycle) {
+		__pin.writeSoftPWM(dutycycle);
+	}
+
+
 }
 
 /**
