@@ -15,7 +15,7 @@ class GPIOBaseTest(BaseTest):
 
 		os.environ["LD_LIBRARY_PATH"] = self.BASE_DIR + os.pathsep + os.environ["LD_LIBRARY_PATH"]
 
-	def __del__(self):
+#	def __del__(self):
 #		GPIO.cleanup()
 
 	def start(self):
