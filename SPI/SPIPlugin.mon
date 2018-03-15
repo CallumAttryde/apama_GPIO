@@ -7,8 +7,9 @@ event SPI {
 
     action init(integer channel, integer speed) returns boolean {
         boolean res := SPIPlugin.setup(channel, speed);
-        if( not res )
+        if( not res ) {
             log "Failed to init SPI plugin" at ERROR;
+	}
         
         return res;
     }

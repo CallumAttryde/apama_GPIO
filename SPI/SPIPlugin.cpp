@@ -6,7 +6,7 @@ void SPIPlugin::initialize(base_plugin_t::method_data_t & md)
 {
 	//md.registerMethod<decltype(&SPIPlugin::convertToBitSequence), &SPIPlugin::convertToBitSequence>("convertToBitSequence", "action<any> returns sequence<bool>");
 	md.registerMethod<decltype(&SPIPlugin::setup), &SPIPlugin::setup>("setup", "action<integer, integer> returns boolean");
-	md.registerMethod<decltype(&SPIPlugin::read), &SPIPlugin::read>("read", "action<> returns bool");
+	md.registerMethod<decltype(&SPIPlugin::read), &SPIPlugin::read>("read", "action<> returns boolean");
 	md.registerMethod<decltype(&SPIPlugin::write), &SPIPlugin::write>("write", "action<integer>");
 	md.registerMethod<decltype(&SPIPlugin::sync), &SPIPlugin::sync>("sync", "action<>");
 	md.registerMethod<decltype(&SPIPlugin::readWrite), &SPIPlugin::readWrite>("readWrite", "action<string, integer> returns string");
