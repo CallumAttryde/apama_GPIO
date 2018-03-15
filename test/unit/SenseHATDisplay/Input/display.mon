@@ -1,0 +1,41 @@
+event Setter
+{
+	integer x;
+	integer y;
+	integer r;
+	integer g;
+	integer b;
+}
+
+event SetterList
+{
+	sequence<Setter> list;
+}
+
+monitor displayTest
+{
+	import "SenseHATPlugin" as senseHat;
+
+	action onload()
+	{
+
+		on SetterList() as sl
+		{
+			Setter s;
+			for s in sl.list
+			{
+				senseHat.setPixel(s.x, s.y, s.r, s.g, s.b);
+			}
+
+			log "Finished loading";
+		}
+
+		senseHat.setPixel(7, 1, 0, 255, 255);
+		senseHat.setPixel(7, 2, 255, 0, 255);
+		senseHat.setPixel(7, 3, 255, 255, 255);
+		senseHat.setPixel(7, 4, 255, 255, 0);
+		senseHat.setPixel(7, 5, 255, 0, 0);
+		senseHat.setPixel(7, 6, 0, 255, 0);
+		senseHat.setPixel(7, 7, 0, 0, 255);
+	}
+}
