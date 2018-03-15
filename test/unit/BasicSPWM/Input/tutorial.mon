@@ -33,20 +33,18 @@ monitor SPWM {
 		on all ActivateSoftPWM(): aspwm
 		{	
 			float dutyCycle;
-			
-		//	led.createSoftPWM(500.0,1500.0);
+		
+			//For each combination of range and duty cycle that needs testing	
 			for dutyCycle in aspwm.combinations.keys()
 			{
 				float range := aspwm.combinations[dutyCycle];
 				log "About to test Duty Cycle " + dutyCycle.toString() + " and range " + range.toString() at INFO;
 				led.createSoftPWM(dutyCycle,range);
-			//	led.writeSoftPWM(dutyCycle);
 				float i:=0.0;
 				float ons := 0.0;
 				float offs := 0.0;
 				float blockValue := (range/1000.0);
 				integer roundedBlock := blockValue.ceil();
-				log "Block Size " + roundedBlock.toString() at INFO;		
 				while i < (range)
 				{
 					// Will only return 0 or 1
@@ -57,7 +55,7 @@ monitor SPWM {
 					else{
 						offs := offs + 1.0;
 					}
-					log "Current Value " + value.toString() at INFO;
+					//log "Current Value " + value.toString() at INFO;
 					GPIOPlugin.block(roundedBlock);		
 					i:=i+1.0;
 				}
