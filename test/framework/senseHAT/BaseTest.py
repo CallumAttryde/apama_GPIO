@@ -12,9 +12,6 @@ class SenseHATBaseTest(BaseTest):
 		os.environ["LD_LIBRARY_PATH"] = self.BASE_DIR + os.pathsep + os.environ["LD_LIBRARY_PATH"]
 		self.sense = SenseHat()
 
-	def __del__(self):
-		self.clearPixels()
-
 	def start(self):
 		self.correlator = CorrelatorHelper(self)
 		self.correlator.start()
@@ -25,6 +22,7 @@ class SenseHATBaseTest(BaseTest):
 	def getPixel(self, x, y):
 		return self.sense.get_pixel(x, y)
 
+	# 3 bits lost for red, 2 for green and 3 for blue
 	def checkPixel(self, x, y, values):
 		values[0] = int(8*math.floor(values[0] / 8))
 		values[1] = int(4*math.floor(values[1] / 4))

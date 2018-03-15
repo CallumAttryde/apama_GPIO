@@ -5,19 +5,13 @@ monitor displayTest
 
 	action onload()
 	{
-		log "HUMIDITY: " + senseHat.getHumidity().toString();
-		log "TEMPERATURE: " + senseHat.getTemperature().toString();
-		log "PRESSURE " + senseHat.getPressure().toString();
-
 		integer ret := 0;
 
 		ret := senseHat.setPixel(5, 4, 255, 255, 0);
 		ret := senseHat.setPixel(5, 5, 255, 0, 0);
 		ret := senseHat.setPixel(5, 6, 0, 255, 0);
 		ret := senseHat.setPixel(5, 7, 0, 0, 255);
-		on wait(8.0)
-		{
-			ret := senseHat.blank();
-		}
+
+		log "Finished loading";
 	}
 }
