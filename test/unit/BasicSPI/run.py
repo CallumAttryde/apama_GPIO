@@ -1,6 +1,6 @@
-from GPIO.BaseTest import GPIOBaseTest
+from SPI.BaseTest import SPIBaseTest
 
-class PySysTest(GPIOBaseTest):
+class PySysTest(SPIBaseTest):
 
 	def execute(self):
 		self.start()

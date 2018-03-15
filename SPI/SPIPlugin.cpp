@@ -12,7 +12,7 @@ void SPIPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&SPIPlugin::readWrite), &SPIPlugin::readWrite>("readWrite", "action<string, integer> returns string");
 }
 
-bool SPI::setup(int64_t channel, int64_t speed)
+bool SPIPlugin::setup(int64_t channel, int64_t speed)
 {
 	int res = wiringPiSPISetup(channel, speed);
 	if(res == -1)
@@ -27,24 +27,24 @@ bool SPI::setup(int64_t channel, int64_t speed)
 	return true;
 }
 
-void SPI::read()
+void SPIPlugin::read()
 {
 	
 }
 
-void SPI::sync()
+void SPIPlugin::sync()
 {
 	digitalWrite(CLK_PIN, 1);
 	digitalWrite(CLK_PIN, 0);	
 }
 
-void SPI::write(int64_t value)
+void SPIPlugin::write(int64_t value)
 {
 	digitalWrite(DAT_PIN, value);
 	sync();
 }
 
-std::string SPI::readWrite(const char* data, int64_t length)
+std::string SPIPlugin::readWrite(const char* data, int64_t length)
 {
 	unsigned char buffer[1024];
 	int size = length < 1024 ? length : 1024;
@@ -62,7 +62,7 @@ void SPIPlugin::block(int64_t milliseconds)
 	delay(milliseconds);
 }
 
-/*list_t GPIOPlugin::convertToBitSequence(const data_t& value)
+/*list_t SPIPlugin::convertToBitSequence(const data_t& value)
 {
 	switch( value.type_tag() )
 	{
@@ -89,7 +89,7 @@ void SPIPlugin::block(int64_t milliseconds)
 	}
 }
 
-list_t GPIOPlugin::convertToBitSequence(int64_t value)
+list_t SPIPlugin::convertToBitSequence(int64_t value)
 {
 	list_t result;
 	int numBits = numeric_limits<int64_t>::digits;
@@ -102,7 +102,7 @@ list_t GPIOPlugin::convertToBitSequence(int64_t value)
 	return result;
 }
 
-list_t GPIOPlugin::convertToBitSequence(double value)
+list_t SPIPlugin::convertToBitSequence(double value)
 {
 	list_t result;
 	int numBits = numeric_limits<double>::digits;
@@ -115,7 +115,7 @@ list_t GPIOPlugin::convertToBitSequence(double value)
 	return result;
 }
 
-list_t GPIOPlugin::convertToBitSequence(decimal_t value)
+list_t SPIPlugin::convertToBitSequence(decimal_t value)
 {
 	list_t result;
 	int numBits = numeric_limits<decimal_t>::digits;
@@ -128,7 +128,7 @@ list_t GPIOPlugin::convertToBitSequence(decimal_t value)
 	return result;
 }
 
-list_t GPIOPlugin::convertToBitSequence(const char* value)
+list_t SPIPlugin::convertToBitSequence(const char* value)
 {
 	list_t result;
 	int numBits = 4;

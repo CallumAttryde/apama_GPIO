@@ -43,12 +43,6 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
-	//md.registerMethod<decltype(&GPIOPlugin::convertToBitSequence), &GPIOPlugin::convertToBitSequence>("convertToBitSequence", "action<any> returns sequence<bool>");
-	md.registerMethod<decltype(&GPIOPlugin::SpiSetup), &GPIOPlugin::SpiSetup>("SpiSetup", "action<integer, integer> returns boolean");
-	md.registerMethod<decltype(&GPIOPlugin::SpiRead), &GPIOPlugin::SpiRead>("SpiRead", "action<>");
-	md.registerMethod<decltype(&GPIOPlugin::SpiWrite), &GPIOPlugin::SpiWrite>("SpiWrite", "action<integer>");
-	md.registerMethod<decltype(&GPIOPlugin::SpiSync), &GPIOPlugin::SpiSync>("SpiSync", "action<>");
-	md.registerMethod<decltype(&GPIOPlugin::SpiReadWrite), &GPIOPlugin::SpiReadWrite>("SpiReadWrite", "action<string, integer> returns string");
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
