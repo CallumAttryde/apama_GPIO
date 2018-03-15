@@ -6,6 +6,8 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 
+#include "SPIPlugin.h"
+
 #include <array>
 
 #define MAX_PIN 40
@@ -33,11 +35,15 @@ public:
 	/** Get info regarding this board */
 	com::softwareag::connectivity::map_t getInfo();
 
-	com::softwareag::connectivity::list_t convertToBitSequence(const com::softwareag::connectivity::data_t& value);
+	bool SpiSetup(int64_t channel, int64_t speed);
+	void SpiRead();
+	void SpiWrite(int64_t value);
+	std::string SpiReadWrite(const char* data, int64_t length);
+	/*com::softwareag::connectivity::list_t convertToBitSequence(const com::softwareag::connectivity::data_t& value);
 	com::softwareag::connectivity::list_t convertToBitSequence(int64_t value);
 	com::softwareag::connectivity::list_t convertToBitSequence(double value);
 	com::softwareag::connectivity::list_t convertToBitSequence(com::softwareag::connectivity::decimal_t value);
-	com::softwareag::connectivity::list_t convertToBitSequence(const char* value);
+	com::softwareag::connectivity::list_t convertToBitSequence(const char* value);*/
 
 	/**  */
 	void watch(int64_t pinId, int64_t eplEdge);
@@ -53,6 +59,8 @@ public:
 
 	/** */
 	void softPWM(int64_t pinId, double dutyCycle);
+
+	SPI SpiInterface;
 
 private:
 	/** Table recording if each pin has softPWM enabled */

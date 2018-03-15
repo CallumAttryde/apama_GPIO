@@ -43,7 +43,11 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::write), &GPIOPlugin::write>("write", "action<integer, boolean>");
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWM), &GPIOPlugin::softPWM>("softPWM", "action<integer, float>");
-	md.registerMethod<decltype(&GPIOPlugin::convertToBitSequence), &GPIOPlugin::convertToBitSequence>("convertToBitSequence", "action<any> returns sequence<bool>");
+	//md.registerMethod<decltype(&GPIOPlugin::convertToBitSequence), &GPIOPlugin::convertToBitSequence>("convertToBitSequence", "action<any> returns sequence<bool>");
+	md.registerMethod<decltype(&GPIOPlugin::SpiSetup), &GPIOPlugin::SpiSetup>("SpiSetup", "action<integer, integer> returns boolean");
+	md.registerMethod<decltype(&GPIOPlugin::SpiRead), &GPIOPlugin::SpiRead>("SpiRead", "action<>");
+	md.registerMethod<decltype(&GPIOPlugin::SpiWrite), &GPIOPlugin::SpiWrite>("SpiWrite", "action<integer>");
+	md.registerMethod<decltype(&GPIOPlugin::SpiReadWrite), &GPIOPlugin::SpiReadWrite>("SpiReadWrite", "action<string, integer> returns string");
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -77,7 +81,27 @@ map_t GPIOPlugin::getInfo()
 	return info;
 }
 
-list_t GPIOPlugin::convertToBitSequence(const data_t& value)
+bool GPIOPlugin::SpiSetup(int64_t channel, int64_t speed)
+{
+	SpiInterface.setup(channel, speed);
+}
+
+void GPIOPlugin::SpiRead()
+{
+	SpiInterface.read();
+}
+
+void GPIOPlugin::SpiWrite(int64_t value)
+{
+	SpiInterface.write(value);
+}
+
+std::string GPIOPlugin::SpiReadWrite(const char* data, int64_t length)
+{
+	return SpiInterface.readWrite(data, length);
+}
+
+/*list_t GPIOPlugin::convertToBitSequence(const data_t& value)
 {
 	switch( value.type_tag() )
 	{
@@ -154,7 +178,7 @@ list_t GPIOPlugin::convertToBitSequence(const char* value)
 	}
 
 	return result;
-}
+}*/
 
 void GPIOPlugin::watch(int64_t pinId, int64_t eplEdge)
 {
