@@ -1,6 +1,7 @@
 #ifndef CORRELATOR_PLUGINS_SenseHATPlugin_H
 #define CORRELATOR_PLUGINS_SenseHATPlugin_H
 
+#include <string>
 #include <epl_plugin.hpp>
 #include "sense-hat.h"
 
@@ -19,11 +20,16 @@ public:
 	double getHumidity() { return hat.get_humidity(); }
 
 	/* Display functions */
-	int64_t setPixel(int64_t x, int64_t y, int64_t r, int64_t g, int64_t b)
+	void setPixel(int64_t x, int64_t y, int64_t r, int64_t g, int64_t b)
 	{
-		return hat.set_pixel(x, y, r, g, b);
+		int rc = hat.set_pixel(x, y, r, g, b);
+		if (rc != 0) throw std::runtime_error("Could not set pixel, rc="+std::to_string(rc));
 	}
-	int64_t blank() { return hat.blank(); }
+	void blank()
+	{
+		int rc = hat.blank();
+		if (rc != 0) throw std::runtime_error("Could not blank the display, rc="+std::to_string(rc));
+	}
 
 private:
 	SenseHAT hat;
