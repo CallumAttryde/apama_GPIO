@@ -1,4 +1,4 @@
-using com.apamax.rpi.spi;
+using com.apamax.rpi.spi.SPI;
 
 monitor BasicSPI {
 	/** @private */
