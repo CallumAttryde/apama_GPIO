@@ -47,6 +47,7 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::SpiSetup), &GPIOPlugin::SpiSetup>("SpiSetup", "action<integer, integer> returns boolean");
 	md.registerMethod<decltype(&GPIOPlugin::SpiRead), &GPIOPlugin::SpiRead>("SpiRead", "action<>");
 	md.registerMethod<decltype(&GPIOPlugin::SpiWrite), &GPIOPlugin::SpiWrite>("SpiWrite", "action<integer>");
+	md.registerMethod<decltype(&GPIOPlugin::SpiSync), &GPIOPlugin::SpiSync>("SpiSync", "action<>");
 	md.registerMethod<decltype(&GPIOPlugin::SpiReadWrite), &GPIOPlugin::SpiReadWrite>("SpiReadWrite", "action<string, integer> returns string");
 }
 
@@ -89,6 +90,11 @@ bool GPIOPlugin::SpiSetup(int64_t channel, int64_t speed)
 void GPIOPlugin::SpiRead()
 {
 	SpiInterface.read();
+}
+
+void GPIOPlugin::SpiSync()
+{
+	SpiInterface.sync();
 }
 
 void GPIOPlugin::SpiWrite(int64_t value)

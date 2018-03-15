@@ -1,7 +1,5 @@
 #include "SPIPlugin.h"
 
-using namespace com::softwareag::connectivity;
-
 bool SPI::setup(int64_t channel, int64_t speed)
 {
 	int res = wiringPiSPISetup(channel, speed);
@@ -22,12 +20,27 @@ void SPI::read()
 	
 }
 
+void SPI::sync()
+{
+	digitalWrite(CLK_PIN, 1);
+	digitalWrite(CLK_PIN, 0);	
+}
+
 void SPI::write(int64_t value)
 {
-	digitalWrite(value);
+	digitalWrite(DAT_PIN, value);
+	sync();
 }
 
 std::string SPI::readWrite(const char* data, int64_t length)
 {
-	int res = wiringPiSPIDataRW(m_channel, data, length);
+	unsigned char buffer[1024];
+	int size = length < 1024 ? length : 1024;
+	for(int i(0); i < size; i++)
+	{
+		buffer[i] = data[i];
+	}
+	int res = wiringPiSPIDataRW(m_channel, buffer, size);
+	std::string returnData = data;
+	return returnData;
 }

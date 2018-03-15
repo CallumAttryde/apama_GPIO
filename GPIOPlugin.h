@@ -38,6 +38,7 @@ public:
 	bool SpiSetup(int64_t channel, int64_t speed);
 	void SpiRead();
 	void SpiWrite(int64_t value);
+	void SpiSync();
 	std::string SpiReadWrite(const char* data, int64_t length);
 	/*com::softwareag::connectivity::list_t convertToBitSequence(const com::softwareag::connectivity::data_t& value);
 	com::softwareag::connectivity::list_t convertToBitSequence(int64_t value);
