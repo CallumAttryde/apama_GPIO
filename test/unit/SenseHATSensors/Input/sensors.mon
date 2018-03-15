@@ -1,0 +1,14 @@
+
+monitor sensors
+{
+	import "SenseHATPlugin" as senseHAT;
+
+	action onload()
+	{
+//		log senseHAT.getTemperature().toString();
+//		log senseHAT.getHumidity().toString();
+//		log senseHAT.getPressure().toString();
+
+		log "Finished loading";
+	}
+}
