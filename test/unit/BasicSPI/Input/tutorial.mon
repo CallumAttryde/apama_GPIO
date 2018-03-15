@@ -5,20 +5,27 @@ monitor BasicSPI {
 	SPI SPIPlugin;
 	
 	action onload() {
-		boolean result := SPIPlugin.init(1, 500000);
+		log "OnLoad reached!";
+		SPIPlugin := (new SPI);
+		boolean result := SPIPlugin.init(0, 500000);
 
 		if(not result) {
 			log "Failed to setup";
 			die;
+		}
+		else {
+			log "Setup succeeded";
 		}
 
 		integer i := 0;
 		while(i < 10)
 		{
 			SPIPlugin.write(1);
-			SPIPlugin.delay(2);
+			log "Writing 1 to SPI";
+			SPIPlugin.delay(2000);
 			SPIPlugin.write(0);
-			SPIPlugin.delay(2);
+			log "Writing 0 to SPI";
+			SPIPlugin.delay(2000);
 
 			i := i + 1;
 		}
