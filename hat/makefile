@@ -14,10 +14,18 @@ $(warning Did you remember to source the apama_env script?)
 $(error APAMA_WORK is not defined)
 endif
 
+
+
+# !!!
+# todo
+# better way of ensuring sense-hat is available rather than building and copying over to this dir
+# !!!
+
+
+
 # C++ compiler
 CXX := /usr/bin/g++ 
 DEFINES := -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
-# -D__arm__ -mfloat-abi=hard
 CXXFLAGS := -std=c++11 -w -fPIC $(DEFINES)
 INCLUDES := "-I$(APAMA_HOME)/include"
 LDFLAGS := -shared -L"$(APAMA_HOME)/lib"
@@ -27,6 +35,8 @@ OBJDIR := ./obj
 
 # the set of object files for this project
 SenseHATPLUGIN-OBJ := SenseHATPlugin
+
+SenseHATPLUGIN-SRC-CPP := senseHATPlugin.cpp
 # --------------------------------------------------------------------
 
 # Toplevel target of this file
@@ -39,7 +49,7 @@ $(OBJDIR)/$(SenseHATPLUGIN-OBJ):$(SenseHATPLUGIN-SRC-CPP)
 
 $(BINDIR)/libSenseHATPlugin.so: $(OBJDIR)/$(SenseHATPLUGIN-OBJ)
 	mkdir -p $(BINDIR)
-	$(CXX) -o $@ $(OBJDIR)/$(SenseHATPLUGIN-OBJ) $(LDFLAGS) -lwiringPi
+	$(CXX) -o $@ $(OBJDIR)/$(SenseHATPLUGIN-OBJ) $(LDFLAGS)
 	
 install:
 	mkdir -p $(APAMA_WORK)/lib
