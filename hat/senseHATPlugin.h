@@ -12,9 +12,6 @@ public:
 
 	/** Link the native plugin functions to the EPL plugin actions */
 	static void initialize(base_plugin_t::method_data_t &md);
-//	{
-//		md.registerMethod<decltype(&SenseHATPlugin::getTemperature), &SenseHATPlugin::getTemperature>("getTemperature", "action<> returns integer");
-//	}
 
 	/** Sensor functions */
 	double getTemperature() { return hat.get_temperature(); }
