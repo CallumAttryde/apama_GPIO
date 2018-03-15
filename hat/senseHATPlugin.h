@@ -22,11 +22,11 @@ public:
 	double getHumidity() { return hat.get_humidity(); }
 
 	/* Display functions */
-	int setPixel(int x, int y, int r, int g, int b)
+	int64_t setPixel(int64_t x, int64_t y, int64_t r, int64_t g, int64_t b)
 	{
 		return hat.set_pixel(x, y, r, g, b);
 	}
-	int blank() { return hat.blank(); }
+	int64_t blank() { return hat.blank(); }
 
 private:
 	SenseHAT hat;

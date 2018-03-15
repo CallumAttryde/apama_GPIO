@@ -19,7 +19,7 @@ CXX := /usr/bin/g++
 DEFINES := -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 CXXFLAGS := -std=c++11 -w -fPIC $(DEFINES)
 INCLUDES := "-I$(APAMA_HOME)/include" "-I./lib"
-LDFLAGS := -shared -L"$(APAMA_HOME)/lib" -L"./lib"
+LDFLAGS := -shared -L"$(APAMA_HOME)/lib"
 
 BINDIR := ./bin
 OBJDIR := ./obj
@@ -40,12 +40,13 @@ $(OBJDIR)/$(SenseHATPLUGIN-OBJ):$(SenseHATPLUGIN-SRC-CPP)
 
 $(BINDIR)/libSenseHATPlugin.so: $(OBJDIR)/$(SenseHATPLUGIN-OBJ)
 	mkdir -p $(BINDIR)
-	$(CXX) -o $@ $(OBJDIR)/$(SenseHATPLUGIN-OBJ) $(LDFLAGS)
+	$(CXX) -o $@ $(OBJDIR)/$(SenseHATPLUGIN-OBJ) $(LDFLAGS) -Llib -lsense-hat
 	
 install:
 	mkdir -p $(APAMA_WORK)/lib
 	mkdir -p $(APAMA_WORK)/monitors
 	cp $(BINDIR)/libSenseHATPlugin.so $(APAMA_WORK)/lib
+	cp lib/libsense-hat.so $(APAMA_WORK)/lib
 	cp SenseHATPlugin.mon $(APAMA_WORK)/monitors
 
 $(OBJDIR):
