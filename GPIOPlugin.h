@@ -51,6 +51,9 @@ public:
 	/** Change the duty cycle on a Pin already set up for Soft PWM*/
 	void softPWMWrite(int64_t pinId, double dutyCycle);
 
+	/** Stop SPWM on this pin*/
+	void softPWMStop(int64_t pinId);
+
 	int64_t getDigitalRead(int64_t pin);
 private:
 	/** Table recording if each pin has softPWM enabled */

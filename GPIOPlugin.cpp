@@ -44,6 +44,7 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWMCreate), &GPIOPlugin::softPWMCreate>("softPWMCreate", "action<integer, float, float>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWMWrite), &GPIOPlugin::softPWMWrite>("softPWMWrite", "action<integer, float>");
+	md.registerMethod<decltype(&GPIOPlugin::softPWMStop), &GPIOPlugin::softPWMStop>("softPWMStop", "action<integer>");
 	md.registerMethod<decltype(&GPIOPlugin::getDigitalRead), &GPIOPlugin::getDigitalRead>("getDigitalRead", "action<integer> returns integer");
 }
 
@@ -120,12 +121,6 @@ void GPIOPlugin::softPWMCreate(int64_t pinId, double dutyCycle, double range)
 
 	softPwmCreate(pinId, dutyCycle, range);
 	softPwmEnabled[pinId] = true;
-	if (digitalRead(pinId) == LOW){
-		pluginInstance->logger.info("***LOW/OFF");		
-	}
-	if (digitalRead(pinId) == HIGH){
-		pluginInstance->logger.info("***HIGH/ON");		
-	}
 }
 
 void GPIOPlugin::softPWMWrite(int64_t pinId, double dutyCycle)
@@ -135,17 +130,19 @@ void GPIOPlugin::softPWMWrite(int64_t pinId, double dutyCycle)
 	if (softPwmEnabled[pinId])
 	{
 		softPwmWrite(pinId, dutyCycle);
-		if (digitalRead(pinId) == LOW){
-			pluginInstance->logger.info("***LOW/OFF");		
-		}
-		if (digitalRead(pinId) == HIGH){
-			pluginInstance->logger.info("***HIGH/ON");		
-		}
 	}
 	else
 	{
 		pluginInstance->logger.error("This pin needs to first have a SoftPWM created on it with a valid range");		
 	}
+}
+
+void GPIOPlugin::softPWMStop(int64_t pinId)
+{
+	checkPinValid(pinId);
+
+	softPwmStop(pinId);
+	softPwmEnabled[pinId] = false;
 }
 
 int64_t GPIOPlugin::getDigitalRead(int64_t pinId){

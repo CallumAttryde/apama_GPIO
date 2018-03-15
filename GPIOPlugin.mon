@@ -161,6 +161,13 @@ event Pin {
 		GPIOPlugin.softPWMWrite(pin, dutycycle);
 	}
 
+	/*
+	 * Stop software pulse width modulation on this pin.
+	 */
+	action stopSoftPWM() {
+		GPIOPlugin.softPWMStop(pin);
+	}
+
 	action getDigitalRead() returns integer{
 		return GPIOPlugin.getDigitalRead(pin);
 	}
@@ -352,6 +359,13 @@ event LED {
 	 */
 	action writeSoftPWM(float dutycycle) {
 		__pin.writeSoftPWM(dutycycle);
+	}
+
+	/*
+	 * Stop software pulse width modulation on this LED.
+	 */
+	action stopSoftPWM() {
+		__pin.stopSoftPWM();
 	}
 
 	action getDigitalRead() returns integer{
