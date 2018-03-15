@@ -1,0 +1,21 @@
+using com.apamax.rpi.gpio;
+
+monitor BasicSPI {
+	/** @private */
+	import "GPIOPlugin" as GPIOPlugin;
+	
+	action onload() {
+		GPIOPlugin.SpiSetup(1, 500000);
+
+		int i := 0;
+		while(i < 10)
+		{
+			GPIOPlugin.SpiWrite(1);
+			GPIOPlugin.block(2);
+			GPIOPlugin.SpiWrite(0);
+			GPIOPlugin.block(2);
+
+			i := i + 1;
+		}
+	}
+}
