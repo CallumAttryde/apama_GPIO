@@ -1,19 +1,19 @@
-using com.apamax.rpi.gpio;
+using com.apamax.rpi.spi.SPI;
 
 monitor BasicSPI {
 	/** @private */
-	import "GPIOPlugin" as GPIOPlugin;
+	import "SPIPlugin" as SPIPlugin;
 	
 	action onload() {
-		GPIOPlugin.SpiSetup(1, 500000);
+		SPIPlugin.init(1, 500000);
 
 		int i := 0;
 		while(i < 10)
 		{
-			GPIOPlugin.SpiWrite(1);
-			GPIOPlugin.block(2);
-			GPIOPlugin.SpiWrite(0);
-			GPIOPlugin.block(2);
+			SPIPlugin.write(1);
+			SPIPlugin.wait(2);
+			SPIPlugin.write(0);
+			SPIPlugin.wait(2);
 
 			i := i + 1;
 		}

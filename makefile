@@ -29,38 +29,26 @@ OBJDIR := ./obj
 GPIOPLUGIN-SRC-CPP := \
 	GPIOPlugin.cpp
 
-SPIPLUGIN-SRC-CPP := SPIPlugin.cpp
-
 # the set of object files for this project
 GPIOPLUGIN-OBJ := GPIOPlugin
-SPIPLUGIN-OBJ := SPIPlugin
 
 # the set of dependency (*.d) files for this project
 GPIOPLUGIN-DEP := $(patsubst %.cpp, %.d, $(GPIOPLUGIN-SRC-CPP) )
-SPIPLUGIN-DEP := $(patsubst %.cpp, %.d, $(SPIPLUGIN-SRC-CPP) )
 
 # --------------------------------------------------------------------
 
 # Toplevel target of this file
 gpioplugin: $(OBJDIR) $(BINDIR)/libGPIOPlugin.so install
-$(OBJDIR) $(BINDIR)/libSPIPlugin.so install
 
 .PHONY: gpioplugin clean
 
 $(OBJDIR)/$(GPIOPLUGIN-OBJ):$(GPIOPLUGIN-SRC-CPP)
 	$(CXX) -c $^ -o $(OBJDIR)/$(GPIOPLUGIN-OBJ) $(CXXFLAGS) $(INCLUDES)
 
-$(OBJDIR)/$(SPIPLUGIN-OBJ):$(SPIPLUGIN-SRC-CPP)
-	$(CXX) -c $^ -o $(OBJDIR)/$(SPIPLUGIN-OBJ) $(CXXFLAGS) $(INCLUDES)
-
 $(BINDIR)/libGPIOPlugin.so: $(OBJDIR)/$(GPIOPLUGIN-OBJ)
 	mkdir -p $(BINDIR)
 	$(CXX) -o $@ $(OBJDIR)/$(GPIOPLUGIN-OBJ) $(LDFLAGS) -lwiringPi
 	
-$(BINDIR)/libSPIPlugin.so: $(OBJDIR)/$(SPIPLUGIN-OBJ)
-	mkdir -p $(BINDIR)
-	$(CXX) -o $@ $(OBJDIR)/$(SPIPLUGIN-OBJ) $(LDFLAGS) -lwiringPi
-
 install:
 	mkdir -p $(APAMA_WORK)/lib
 	mkdir -p $(APAMA_WORK)/monitors

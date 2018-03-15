@@ -1,0 +1,31 @@
+package com.apamax.rpi.spi;
+
+event SPI {
+
+    /** @private */
+    import "SPIPlugin" as SPIPlugin;
+
+    action init(int channel, int speed) {
+        SPIPlugin.setup(channel, speed);
+    }
+
+    action wait(integer ms) {
+        SPIPlugin.block(ms);
+    }
+
+    action read() {
+        SPIPlugin.read();
+    }
+
+    action write(integer value) {
+        SPIPlugin.write(value);
+    }
+
+    action readWrite(string data) {
+        SPIPlugin.readWrite(data, data.length());
+    }
+
+    action sync() {
+        SPIPlugin.sync();
+    }
+}

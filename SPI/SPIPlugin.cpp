@@ -1,0 +1,142 @@
+#include "SPIPlugin.h"
+
+using namespace com::softwareag::connectivity;
+
+void SPIPlugin::initialize(base_plugin_t::method_data_t & md)
+{
+	//md.registerMethod<decltype(&SPIPlugin::convertToBitSequence), &SPIPlugin::convertToBitSequence>("convertToBitSequence", "action<any> returns sequence<bool>");
+	md.registerMethod<decltype(&SPIPlugin::setup), &SPIPlugin::setup>("setup", "action<integer, integer> returns boolean");
+	md.registerMethod<decltype(&SPIPlugin::read), &SPIPlugin::read>("read", "action<>");
+	md.registerMethod<decltype(&SPIPlugin::write), &SPIPlugin::write>("write", "action<integer>");
+	md.registerMethod<decltype(&SPIPlugin::sync), &SPIPlugin::sync>("sync", "action<>");
+	md.registerMethod<decltype(&SPIPlugin::readWrite), &SPIPlugin::readWrite>("readWrite", "action<string, integer> returns string");
+}
+
+bool SPI::setup(int64_t channel, int64_t speed)
+{
+	int res = wiringPiSPISetup(channel, speed);
+	if(res == -1)
+	{
+		// TODO: log something
+		return false;
+	}
+
+	m_channel = channel;
+	m_speed = speed;
+
+	return true;
+}
+
+void SPI::read()
+{
+	
+}
+
+void SPI::sync()
+{
+	digitalWrite(CLK_PIN, 1);
+	digitalWrite(CLK_PIN, 0);	
+}
+
+void SPI::write(int64_t value)
+{
+	digitalWrite(DAT_PIN, value);
+	sync();
+}
+
+std::string SPI::readWrite(const char* data, int64_t length)
+{
+	unsigned char buffer[1024];
+	int size = length < 1024 ? length : 1024;
+	for(int i(0); i < size; i++)
+	{
+		buffer[i] = data[i];
+	}
+	int res = wiringPiSPIDataRW(m_channel, buffer, size);
+	std::string returnData = data;
+	return returnData;
+}
+
+void SPIPlugin::block(int64_t milliseconds)
+{
+	delay(milliseconds);
+}
+
+/*list_t GPIOPlugin::convertToBitSequence(const data_t& value)
+{
+	switch( value.type_tag() )
+	{
+		case SAG_DATA_INTEGER:
+		{
+			convertToBitSequence(value.get<int64_t>());
+		}
+		break;
+		case SAG_DATA_DOUBLE:
+		{
+			convertToBitSequence(value.get<double>());
+		}
+		break;
+		case SAG_DATA_DECIMAL:
+		{
+			convertToBitSequence(value.get<decimal_t>());
+		}
+		break;
+		case SAG_DATA_STRING:
+		{
+			convertToBitSequence(value.get<const char*>());
+		}
+		break;
+	}
+}
+
+list_t GPIOPlugin::convertToBitSequence(int64_t value)
+{
+	list_t result;
+	int numBits = numeric_limits<int64_t>::digits;
+	int64_t maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}
+
+list_t GPIOPlugin::convertToBitSequence(double value)
+{
+	list_t result;
+	int numBits = numeric_limits<double>::digits;
+	double maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}
+
+list_t GPIOPlugin::convertToBitSequence(decimal_t value)
+{
+	list_t result;
+	int numBits = numeric_limits<decimal_t>::digits;
+	decimal_t maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}
+
+list_t GPIOPlugin::convertToBitSequence(const char* value)
+{
+	list_t result;
+	int numBits = 4;
+	char maxMask = 1 << (numBits - 1);
+	for (int b = 0; b < numBits; b++)
+	{
+		result.push_back(value & (maxMask >> b));		
+	}
+
+	return result;
+}*/
