@@ -27,7 +27,7 @@ event SPI {
     }
 
     action readWrite(sequence<integer> data) returns sequence<integer> {
-        return SPIPlugin.readWrite(data, data.length());
+        return SPIPlugin.readWrite(data, data.size());
     }
 
     action sync() {

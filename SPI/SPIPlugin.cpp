@@ -50,10 +50,12 @@ com::softwareag::connectivity::list_t SPIPlugin::readWrite(com::softwareag::conn
 	int size = length < 1024 ? length : 1024;
 	for(int i(0); i < size; i++)
 	{
-		buffer[i] = data[i];
+		buffer[i] = (int)get<int64_t>(data[i]);
 	}
 	int res = wiringPiSPIDataRW(m_channel, buffer, size);
-	std::string returnData = data;
+	com::softwareag::connectivity::list_t returnData;
+	for(int i(0); i < size; i++)
+		returnData.push_back(data);
 	return returnData;
 }
 
