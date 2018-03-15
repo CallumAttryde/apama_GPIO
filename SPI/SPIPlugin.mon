@@ -26,7 +26,7 @@ event SPI {
         SPIPlugin.write(value);
     }
 
-    action readWrite(string data) returns string {
+    action readWrite(sequence<integer> data) returns sequence<integer> {
         return SPIPlugin.readWrite(data, data.length());
     }
 

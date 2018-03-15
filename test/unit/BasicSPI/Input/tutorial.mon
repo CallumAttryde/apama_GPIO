@@ -18,12 +18,17 @@ monitor BasicSPI {
 		}
 
 		integer i := 0;
+		sequence<integer> send;
+		send.add(1);
+		sequence<integer> recieve;
 		while(i < 10)
 		{
-			SPIPlugin.write(1);
+			send[0] = 1;
+			receive = SPIPlugin.readWrite(send);
 			log "Writing 1 to SPI";
 			SPIPlugin.delay(2000);
-			SPIPlugin.write(0);
+			send[0] = 0;
+			receive = SPIPlugin.readWrite(send);
 			log "Writing 0 to SPI";
 			SPIPlugin.delay(2000);
 

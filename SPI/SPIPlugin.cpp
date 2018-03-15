@@ -9,7 +9,7 @@ void SPIPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&SPIPlugin::read), &SPIPlugin::read>("read", "action<> returns boolean");
 	md.registerMethod<decltype(&SPIPlugin::write), &SPIPlugin::write>("write", "action<integer>");
 	md.registerMethod<decltype(&SPIPlugin::sync), &SPIPlugin::sync>("sync", "action<>");
-	md.registerMethod<decltype(&SPIPlugin::readWrite), &SPIPlugin::readWrite>("readWrite", "action<string, integer> returns string");
+	md.registerMethod<decltype(&SPIPlugin::readWrite), &SPIPlugin::readWrite>("readWrite", "action<sequence<integer>, integer> returns sequence<integer>");
 	md.registerMethod<decltype(&SPIPlugin::block), &SPIPlugin::block>("block", "action<integer>");
 }
 
@@ -44,7 +44,7 @@ void SPIPlugin::write(int64_t value)
 	sync();
 }
 
-std::string SPIPlugin::readWrite(const char* data, int64_t length)
+com::softwareag::connectivity::list_t SPIPlugin::readWrite(com::softwareag::connectivity::list_t data, int64_t length)
 {
 	unsigned char buffer[1024];
 	int size = length < 1024 ? length : 1024;
