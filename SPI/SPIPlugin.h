@@ -24,7 +24,7 @@ public:
 
 	bool setup(int64_t channel, int64_t speed);
 
-	void read();
+	bool read();
 	void write(int64_t value);
 	void sync();		// Toggles the clock pin, sending data
 	std::string readWrite(const char* data, int64_t length);

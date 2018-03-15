@@ -6,15 +6,19 @@ event SPI {
     import "SPIPlugin" as SPIPlugin;
 
     action init(integer channel, integer speed) returns boolean {
-        return SPIPlugin.setup(channel, speed);
+        boolean res := SPIPlugin.setup(channel, speed);
+        if( not res )
+            log "Failed to init SPI plugin" at ERROR;
+        
+        return res;
     }
 
     action delay(integer ms) {
         SPIPlugin.block(ms);
     }
 
-    action read() {
-        SPIPlugin.read();
+    action read() returns boolean {
+        return SPIPlugin.read();
     }
 
     action write(integer value) {
