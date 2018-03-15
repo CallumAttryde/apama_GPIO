@@ -2,7 +2,7 @@
 <pysystest type="auto" state="runnable">
     
   <description> 
-    <title>Toggle an LED on pin 17 every 5 seconds</title>    
+    <title>Test various combinations of Range and dutyCycle for SPWM</title>    
     <purpose></purpose>
   </description>
 
