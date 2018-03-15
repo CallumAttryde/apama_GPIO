@@ -27,7 +27,7 @@ public:
 	bool read();
 	void write(int64_t value);
 	void sync();		// Toggles the clock pin, sending data
-	com::softwareag::connectivity::list_t readWrite(com::softwareag::connectivity::list_t data, int64_t length);
+	com::softwareag::connectivity::list_t readWrite(const com::softwareag::connectivity::list_t& data, int64_t length);
 
 	/*com::softwareag::connectivity::list_t convertToBitSequence(const com::softwareag::connectivity::data_t& value);
 	com::softwareag::connectivity::list_t convertToBitSequence(int64_t value);

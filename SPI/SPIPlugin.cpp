@@ -44,7 +44,7 @@ void SPIPlugin::write(int64_t value)
 	sync();
 }
 
-com::softwareag::connectivity::list_t SPIPlugin::readWrite(com::softwareag::connectivity::list_t data, int64_t length)
+com::softwareag::connectivity::list_t SPIPlugin::readWrite(const com::softwareag::connectivity::list_t& data, int64_t length)
 {
 	unsigned char buffer[1024];
 	int size = length < 1024 ? length : 1024;
@@ -55,7 +55,7 @@ com::softwareag::connectivity::list_t SPIPlugin::readWrite(com::softwareag::conn
 	int res = wiringPiSPIDataRW(m_channel, buffer, size);
 	com::softwareag::connectivity::list_t returnData;
 	for(int i(0); i < size; i++)
-		returnData.push_back(data);
+		returnData.push_back(com::softwareag::connectivity::data_t((int64_t)buffer[i]).copy());
 	return returnData;
 }
 
