@@ -1,18 +1,13 @@
 using com.apamax.rpi.gpio.Setup;
 using com.apamax.rpi.gpio.LED;
 
-event Step
-{
-	integer i;
-}
-
 event ActivateSoftPWM
 {
 	float dutyCycle;
 	float range;
 }
 
-monitor BasicLED {
+monitor SPWM {
 	/** @private */
 	import "GPIOPlugin" as GPIOPlugin;
 
@@ -26,48 +21,52 @@ monitor BasicLED {
 		// Create an LED event on pin 18
 		LED led := (new LED).init(18, false);
 		
-		// Turn the LED on
-	/*	led.setOn();
-		if not (led.isHigh()) {
+		// Turn the LED off
+		led.setOff();
+		if (led.isHigh()) {
 			log "TEST FAILED";
 		}
-		log "LED on";
-*/
-		on Step(1)
-		{
-			// Turn the LED off
-			led.setOff();
-			if (led.isHigh()) {
-				log "TEST FAILED";
-			}
-			log "LED off";
-		}
-
+		log "LED off";
+	
 		ActivateSoftPWM aspwm;		
 		on ActivateSoftPWM(): aspwm
 		{
-			integer loops := 5;
+			integer loops := 1;
+			led.createSoftPWM(aspwm.dutyCycle,aspwm.range);
+			float i:=0.0;
+			float ons := 0.0;
+			float offs := 0.0;
+			float blockValue := (aspwm.range/1000.0);
+			integer roundedBlock := blockValue.ceil();
+			log "Block Size " + roundedBlock.toString() at INFO;		
 			while (loops > 0)
 			{
-				led.createSoftPWM(aspwm.dutyCycle,aspwm.range);
-				float i:=0.0;
-				while i < aspwm.range
+				while i < (aspwm.range)
 				{
-					led.writeSoftPWM(i);
-					log "Write up " + i.toString() at INFO;
-					GPIOPlugin.block(25);		
+					// Will only return 0 or 1
+					integer value := led.getDigitalRead();
+					if (value=1){
+						ons := ons + 1.0;
+					}
+					else{
+						offs := offs + 1.0;
+					}
+					log "Current Value " + value.toString() at INFO;
+					GPIOPlugin.block(roundedBlock);		
 					i:=i+1.0;
 				}
-
-				while i > 0.0
-				{
-					led.writeSoftPWM(i);
-					log "Write Down " + i.toString() at INFO;
-					GPIOPlugin.block(25);		
-					i:=i-1.0;
-				}
-				loops := loops-1;
+				loops := loops - 1;
 			}
+			log "Ons " + ons.toString() + "  Offs " + offs.toString() at INFO;
+			float onsPercentOfRange := (ons*100.0)/aspwm.range;
+			log "The Number of Ons as a percent of Range " + onsPercentOfRange.toString() at INFO;
+			float expected := (aspwm.dutyCycle*100.0)/aspwm.range;
+			log "Expected is " + expected.toString() at INFO;
+			
+			print "The Number of Ons as a percent of Range " + onsPercentOfRange.toString();
+			print "Expected is " + expected.toString();
+			
+			
 			//Ensure the LED is turned off
 			led.writeSoftPWM(0.0);
 

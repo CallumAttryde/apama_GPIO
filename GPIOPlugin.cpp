@@ -44,6 +44,7 @@ void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&GPIOPlugin::block), &GPIOPlugin::block>("block", "action<integer>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWMCreate), &GPIOPlugin::softPWMCreate>("softPWMCreate", "action<integer, float, float>");
 	md.registerMethod<decltype(&GPIOPlugin::softPWMWrite), &GPIOPlugin::softPWMWrite>("softPWMWrite", "action<integer, float>");
+	md.registerMethod<decltype(&GPIOPlugin::getDigitalRead), &GPIOPlugin::getDigitalRead>("getDigitalRead", "action<integer> returns integer");
 }
 
 int64_t GPIOPlugin::setup(const list_t &inputPins, const list_t &outputPins)
@@ -145,6 +146,11 @@ void GPIOPlugin::softPWMWrite(int64_t pinId, double dutyCycle)
 	{
 		pluginInstance->logger.error("This pin needs to first have a SoftPWM created on it with a valid range");		
 	}
+}
+
+int64_t GPIOPlugin::getDigitalRead(int64_t pinId){
+	checkPinValid(pinId);
+	return (digitalRead(pinId)==LOW? 0:1);
 }
 
 void GPIOPlugin::exportPin(const int64_t pin, const char * mode)

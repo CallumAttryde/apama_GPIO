@@ -161,6 +161,10 @@ event Pin {
 		GPIOPlugin.softPWMWrite(pin, dutycycle);
 	}
 
+	action getDigitalRead() returns integer{
+		return GPIOPlugin.getDigitalRead(pin);
+	}
+
 	/**
 	 * Enquire the active state of the pin.
 	 *
@@ -350,7 +354,9 @@ event LED {
 		__pin.writeSoftPWM(dutycycle);
 	}
 
-
+	action getDigitalRead() returns integer{
+		return 	__pin.getDigitalRead();
+	}
 }
 
 /**
