@@ -10,6 +10,7 @@ void SPIPlugin::initialize(base_plugin_t::method_data_t & md)
 	md.registerMethod<decltype(&SPIPlugin::write), &SPIPlugin::write>("write", "action<integer>");
 	md.registerMethod<decltype(&SPIPlugin::sync), &SPIPlugin::sync>("sync", "action<>");
 	md.registerMethod<decltype(&SPIPlugin::readWrite), &SPIPlugin::readWrite>("readWrite", "action<string, integer> returns string");
+	md.registerMethod<decltype(&SPIPlugin::block), &SPIPlugin::block>("block", "action<integer>");
 }
 
 bool SPIPlugin::setup(int64_t channel, int64_t speed)

@@ -1,15 +1,13 @@
-package com.apamax.rpi.spi;
-
 event SPI {
 
     /** @private */
     import "SPIPlugin" as SPIPlugin;
 
-    action init(int channel, int speed) {
-        SPIPlugin.setup(channel, speed);
+    action init(integer channel, integer speed) returns boolean {
+        return SPIPlugin.setup(channel, speed);
     }
 
-    action wait(integer ms) {
+    action delay(integer ms) {
         SPIPlugin.block(ms);
     }
 
@@ -21,8 +19,8 @@ event SPI {
         SPIPlugin.write(value);
     }
 
-    action readWrite(string data) {
-        SPIPlugin.readWrite(data, data.length());
+    action readWrite(string data) returns string {
+        return SPIPlugin.readWrite(data, data.length());
     }
 
     action sync() {
