@@ -29,7 +29,7 @@ bool SPIPlugin::setup(int64_t channel, int64_t speed)
 
 bool SPIPlugin::read()
 {
-	return digitalRead(DAT_PIN)
+	return digitalRead(DAT_PIN);
 }
 
 void SPIPlugin::sync()
