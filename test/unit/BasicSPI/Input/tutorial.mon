@@ -1,19 +1,24 @@
-using com.apamax.rpi.spi.SPI;
+using com.apamax.rpi.spi;
 
 monitor BasicSPI {
 	/** @private */
-	import "SPIPlugin" as SPIPlugin;
+	SPI SPIPlugin;
 	
 	action onload() {
-		SPIPlugin.init(1, 500000);
+		boolean result := SPIPlugin.init(1, 500000);
 
-		int i := 0;
+		if(not result) {
+			log "Failed to setup";
+			die;
+		}
+
+		integer i := 0;
 		while(i < 10)
 		{
 			SPIPlugin.write(1);
-			SPIPlugin.wait(2);
+			SPIPlugin.delay(2);
 			SPIPlugin.write(0);
-			SPIPlugin.wait(2);
+			SPIPlugin.delay(2);
 
 			i := i + 1;
 		}
