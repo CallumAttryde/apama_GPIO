@@ -29,18 +29,18 @@ bool SPIPlugin::setup(int64_t channel, int64_t speed)
 
 bool SPIPlugin::read()
 {
-	return digitalRead(DAT_PIN);
+	return digitalRead(MISO_PIN);
 }
 
 void SPIPlugin::sync()
 {
-	digitalWrite(CLK_PIN, 1);
-	digitalWrite(CLK_PIN, 0);	
+	digitalWrite(SCLK_PIN, 1);
+	digitalWrite(SCLK_PIN, 0);	
 }
 
 void SPIPlugin::write(int64_t value)
 {
-	digitalWrite(DAT_PIN, value);
+	digitalWrite(MOSI_PIN, value);
 	sync();
 }
 

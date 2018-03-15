@@ -38,8 +38,11 @@ public:
 	/** Block processing */
 	void block(int64_t milliseconds);
 
-	static const int CLK_PIN = 27;	// Clock pin, used to synchronise data
-	static const int DAT_PIN = 28;	// Data pin, sends value over SPI when clock pin is active
+	static const int CE1_PIN = 15;
+	static const int CE0_PIN = 17;
+	static const int MOSI_PIN = 19;		// Master Out, Slave In
+	static const int MISO_PIN = 21;		// Master In, Slave Out
+	static const int SCLK_PIN = 23;		// Clock pin, used to synchronise data
 
 private:
 	int64_t m_channel;		// 0 or 1. Dictates which channel on the Pi to use.
