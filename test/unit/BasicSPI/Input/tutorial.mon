@@ -4,9 +4,14 @@ event Step{
 	integer i;
 }
 
+event com.apamax.rpi.gpio.Interrupt {
+	integer pin;
+}
+
 monitor BasicSPI {
 	/** @private */
 	SPI SPIPlugin;
+	import "GPIOPlugin" as GPIO;
 	
 	action onload() {
 		log "OnLoad reached!";
@@ -19,6 +24,12 @@ monitor BasicSPI {
 		}
 		else {
 			log "Setup succeeded";
+		}
+
+		GPIO.watch(19, 0);
+
+		on com.apamax.rpi.gpio.Interrupt(19) {
+			log "Detected falling edge on pin 19!"
 		}
 
 		on Step(1) {
