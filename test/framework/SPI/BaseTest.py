@@ -27,9 +27,9 @@ class SPIBaseTest(BaseTest):
 		GPIO.setup(pinID, GPIO.IN)
 		self.assertTrue(expectedValue == GPIO.input(pinID))
 
-	def peekPin(self, pinID, expectedValue):
-		GPIO.Setup(pinID, GPIO.IN)
-		result = false;
-		for i in range(100):
-			result = result or expectedValue == GPIO.input(pinID)
-		selt.assertTrue(result)
+	def waitForEdge(self, pinID, rising):
+            GPIO.setup(pinID, GPIO.IN)
+            if rising == True:
+		return GPIO.wait_for_edge(pinID, GPIO.RISING, timeout=5000)
+            else:
+                return GPIO.wait_for_edge(pinID, GPIO.FALLING, timeout=5000)

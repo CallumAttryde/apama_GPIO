@@ -35,7 +35,7 @@ bool SPIPlugin::read()
 void SPIPlugin::sync()
 {
 	digitalWrite(SCLK_PIN, 1);
-	digitalWrite(SCLK_PIN, 0);	
+//	digitalWrite(SCLK_PIN, 0);	
 }
 
 void SPIPlugin::write(int64_t value)

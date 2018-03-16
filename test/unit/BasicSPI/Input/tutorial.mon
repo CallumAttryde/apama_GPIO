@@ -26,9 +26,8 @@ monitor BasicSPI {
 			sequence<integer> dataSend := new sequence<integer>;
 			dataSend.append(1);
 			sequence<integer> dataReceive := new sequence<integer>;
-			while(i < 10000)
+			while(i < 100000)
 			{
-				dataSend[0] := 1;
 				dataReceive := SPIPlugin.readWrite(dataSend);
 				
 				i := i + 1;

@@ -7,9 +7,12 @@ class PySysTest(SPIBaseTest):
 
 		self.correlator.injectMonitorscript(filenames=['tutorial.mon'])
 		self.correlator.sendEventStrings('Step(1)')
-		self.peekPin(24, 1)
+                print "Waiting for rising edge on pin 19"
+		channel = self.waitForEdge(19, False)
+                print "Finished waiting"
+                self.assertTrue(channel is not None)
 	        self.waitForSignal('correlator.out', expr='Step 1 complete', errorExpr=['TEST FAILED'], timeout=10)
-		self.checkPin(24, 0)
+		self.checkPin(19, 0)
 
 	def validate(self):
 		pass
