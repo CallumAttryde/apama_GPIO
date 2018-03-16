@@ -52,8 +52,8 @@ $(BINDIR)/libGPIOPlugin.so: $(OBJDIR)/$(GPIOPLUGIN-OBJ)
 install:
 	mkdir -p $(APAMA_WORK)/lib
 	mkdir -p $(APAMA_WORK)/monitors
-	cp $(BINDIR)/libGPIOPlugin.so $(APAMA_WORK)/lib
-	cp GPIOPlugin.mon $(APAMA_WORK)/monitors
+	cp $(BINDIR)/*.so $(APAMA_WORK)/lib
+	cp *.mon $(APAMA_WORK)/monitors
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
