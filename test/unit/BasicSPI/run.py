@@ -6,7 +6,8 @@ class PySysTest(SPIBaseTest):
 		self.start()
 
 		self.correlator.injectMonitorscript(filenames=['tutorial.mon'])
-	        self.wait(10)
+		self.correlator.sendEventStrings('Step(1)')
+	        self.waitForSignal('correlator.out', expr='Step 1 complete', errorExpr=['TEST FAILED'], timeout=10)
 
 	def validate(self):
 		pass
