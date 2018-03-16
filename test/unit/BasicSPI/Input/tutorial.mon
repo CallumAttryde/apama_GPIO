@@ -1,0 +1,47 @@
+using com.apamax.rpi.spi.SPI;
+using com.apamax.rpi.gpio.Interrupt;
+
+event Step{
+	integer i;
+}
+
+monitor BasicSPI {
+	/** @private */
+	SPI SPIPlugin;
+	import "GPIOPlugin" as GPIO;
+	
+	action onload() {
+		log "OnLoad reached!";
+		SPIPlugin := (new SPI);
+		boolean result := SPIPlugin.init(0, 500000);
+
+		if(not result) {
+			log "Failed to setup";
+			die;
+		}
+		else {
+			log "Setup succeeded";
+		}
+
+		// using this seems to cause a seg fault?
+		//GPIO.watch(19, 2);
+
+		on Interrupt(19) {
+			log "Detected falling edge on pin 19!";
+		}
+
+		on Step(1) {
+			integer i := 0;
+			sequence<integer> dataSend := new sequence<integer>;
+			dataSend.append(1);
+			sequence<integer> dataReceive := new sequence<integer>;
+			while(i < 100000)
+			{
+				dataReceive := SPIPlugin.readWrite(dataSend);
+				
+				i := i + 1;
+			}
+			log "Step 1 complete";
+		}
+	}
+}

@@ -1,0 +1,36 @@
+package com.apamax.rpi.spi;
+
+event SPI {
+
+    /** @private */
+    import "SPIPlugin" as SPIPlugin;
+
+    action init(integer channel, integer speed) returns boolean {
+        boolean res := SPIPlugin.setup(channel, speed);
+        if( not res ) {
+            log "Failed to init SPI plugin" at ERROR;
+	}
+        
+        return res;
+    }
+
+    action delay(integer ms) {
+        SPIPlugin.block(ms);
+    }
+
+    action read() returns boolean {
+        return SPIPlugin.read();
+    }
+
+    action write(integer value) {
+        SPIPlugin.write(value);
+    }
+
+    action readWrite(sequence<integer> data) returns sequence<integer> {
+        return SPIPlugin.readWrite(data, data.size());
+    }
+
+    action sync() {
+        SPIPlugin.sync();
+    }
+}
