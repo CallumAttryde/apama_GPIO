@@ -1,6 +1,6 @@
 using com.apamax.rpi.spi.SPI;
 
-event Setup{
+event Step{
 	integer i;
 }
 
@@ -23,23 +23,23 @@ monitor BasicSPI {
 
 		on Step(1) {
 			integer i := 0;
-			sequence<integer> send;
-			send.add(1);
-			sequence<integer> recieve;
+			sequence<integer> dataSend := new sequence<integer>;
+			dataSend.append(1);
+			sequence<integer> dataReceive := new sequence<integer>;
 			while(i < 10)
 			{
-				send[0] = 1;
-				receive = SPIPlugin.readWrite(send);
+				dataSend[0] := 1;
+				dataReceive := SPIPlugin.readWrite(dataSend);
 				log "Writing 1 to SPI";
-				SPIPlugin.delay(2000);
-				send[0] = 0;
-				receive = SPIPlugin.readWrite(send);
+				SPIPlugin.delay(200);
+				dataSend[0] := 0;
+				dataReceive := SPIPlugin.readWrite(dataSend);
 				log "Writing 0 to SPI";
-				SPIPlugin.delay(2000);
+				SPIPlugin.delay(200);
 
 				i := i + 1;
 			}
-			log "Step 1 complete"
+			log "Step 1 complete";
 		}
 	}
 }
