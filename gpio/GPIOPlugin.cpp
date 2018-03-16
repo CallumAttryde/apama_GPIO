@@ -34,6 +34,7 @@ void GPIOPlugin::interruptCallback(int pin) {
 	oss << "com.apamax.rpi.gpio.Interrupt(" << pin << ")";
 	getCorrelator().sendEvent(oss.str());
 }
+
 void GPIOPlugin::initialize(base_plugin_t::method_data_t & md)
 {
 	md.registerMethod<decltype(&GPIOPlugin::setup), &GPIOPlugin::setup>("setup", "action<sequence<integer>, sequence<integer> > returns integer");
@@ -133,6 +134,7 @@ void GPIOPlugin::softPWMWrite(int64_t pinId, double dutyCycle)
 	}
 	else
 	{
+		// change to exception
 		pluginInstance->logger.error("This pin needs to first have a SoftPWM created on it with a valid range");		
 	}
 }

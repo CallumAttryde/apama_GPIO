@@ -48,10 +48,10 @@ public:
 	/** Set a Pin up for Software Pulse Width Modulation */
 	void softPWMCreate(int64_t pinId, double dutyCycle, double range=0);
 
-	/** Change the duty cycle on a Pin already set up for Soft PWM*/
+	/** Change the duty cycle on a Pin already set up for Soft PWM */
 	void softPWMWrite(int64_t pinId, double dutyCycle);
 
-	/** Stop SPWM on this pin*/
+	/** Stop SPWM on this pin */
 	void softPWMStop(int64_t pinId);
 
 	int64_t getDigitalRead(int64_t pin);
