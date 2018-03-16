@@ -26,3 +26,10 @@ class SPIBaseTest(BaseTest):
 	def checkPin(self, pinID, expectedValue):
 		GPIO.setup(pinID, GPIO.IN)
 		self.assertTrue(expectedValue == GPIO.input(pinID))
+
+	def peekPin(self, pinID, expectedValue):
+		GPIO.Setup(pinID, GPIO.IN)
+		result = false;
+		for i in range(100):
+			result = result or expectedValue == GPIO.input(pinID)
+		selt.assertTrue(result)
