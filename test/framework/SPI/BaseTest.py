@@ -21,6 +21,7 @@ class SPIBaseTest(BaseTest):
 	def start(self):
 		self.correlator = CorrelatorHelper(self)#, name='SPICorrelator')
 		self.correlator.start()
+		self.correlator.injectMonitorscript(filenames=[os.path.join(self.BASE_DIR, '../GPIOPlugin.mon')])
 		self.correlator.injectMonitorscript(filenames=[os.path.join(self.BASE_DIR, 'SPIPlugin.mon')])
 
 	def checkPin(self, pinID, expectedValue):

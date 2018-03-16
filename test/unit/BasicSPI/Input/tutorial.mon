@@ -1,11 +1,8 @@
 using com.apamax.rpi.spi.SPI;
+using com.apamax.rpi.gpio.Interrupt;
 
 event Step{
 	integer i;
-}
-
-event com.apamax.rpi.gpio.Interrupt {
-	integer pin;
 }
 
 monitor BasicSPI {
@@ -26,10 +23,11 @@ monitor BasicSPI {
 			log "Setup succeeded";
 		}
 
-		GPIO.watch(19, 0);
+		// using this seems to cause a seg fault?
+		//GPIO.watch(19, 2);
 
-		on com.apamax.rpi.gpio.Interrupt(19) {
-			log "Detected falling edge on pin 19!"
+		on Interrupt(19) {
+			log "Detected falling edge on pin 19!";
 		}
 
 		on Step(1) {
