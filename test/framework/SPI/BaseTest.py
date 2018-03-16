@@ -1,6 +1,6 @@
 from pysys.basetest import BaseTest
 from apama.correlator import CorrelatorHelper
-import RPi.GPIO as GPIO 
+import RPi.GPIO as GPIO
 import os
 
 class SPIBaseTest(BaseTest):
@@ -22,3 +22,7 @@ class SPIBaseTest(BaseTest):
 		self.correlator = CorrelatorHelper(self)#, name='SPICorrelator')
 		self.correlator.start()
 		self.correlator.injectMonitorscript(filenames=[os.path.join(self.BASE_DIR, 'SPIPlugin.mon')])
+
+	def checkPin(self, pinID, expectedValue):
+		GPIO.setup(pinID, GPIO.IN)
+		self.assertTrue(expectedValue == GPIO.input(pinID))
